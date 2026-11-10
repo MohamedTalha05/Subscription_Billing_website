@@ -1,0 +1,6 @@
+{
+  "name": "Billing .eu",
+  "description": "Professional subscription billing for SaaS companies in the EU, built compliant from the first invoice.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
