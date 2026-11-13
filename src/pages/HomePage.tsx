@@ -3,29 +3,22 @@ import {
   ArrowRight,
   Building2,
   ChartLine,
+  Check,
   CreditCard,
+  FileCode2,
   FileText,
+  History,
   Layers,
-  Loader,
-  MessageSquare,
+  Plug,
   RotateCw,
   Shield,
-  ShieldAlert,
+  ShieldCheck,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import {
-  Avatar,
-  BrowserFrame,
-  ButtonLink,
-  CheckList,
-  CtaPanel,
-  Eyebrow,
-  Ratings,
-  SCREENS,
-  SectionHeader,
-  usePageTitle,
-  type Person,
-} from '../components/ui';
+import { BrowserFrame, ButtonLink, CheckList, CtaPanel, Eyebrow, SCREENS, SectionHeader } from '../components/ui';
+import { DeadlineStrip, FaqList, PdfVsStructured, StatusPill } from '../components/einvoicing';
+import { HOME_FAQ } from '../content/homeFaq';
+import { ACCOUNTING, PAYMENT_GATEWAYS } from '../content/integrations';
 import { LINKS } from '../config';
 
 /* ---------------- Hero ---------------- */
@@ -43,15 +36,16 @@ function StatBubble({ label, value, className }: { label: string; value: string;
 
 function Hero() {
   return (
-    <section className="container-x grid items-center gap-14 pb-20 pt-14 sm:pb-24 sm:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:pb-28 lg:pt-24">
+    <section className="container-x grid items-center gap-14 pb-16 pt-14 sm:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:pb-20 lg:pt-24">
       <div>
-        <Eyebrow>Subscription billing for SaaS</Eyebrow>
+        <Eyebrow>Subscription billing &amp; e-invoicing</Eyebrow>
         <h1 className="font-display mt-5 text-[2.5rem] leading-[1.06] sm:text-[3.5rem] lg:text-[3.75rem]">
-          Recurring revenue infrastructure, <span className="marker">built compliant</span> from the first invoice.
+          Recurring revenue and German e-invoicing, <span className="marker">built compliant</span> from the first
+          invoice.
         </h1>
         <p className="mt-6 max-w-[34rem] text-lg leading-relaxed sm:text-[1.1875rem]">
-          Plans, pay links, dunning, payouts, and EU tax &amp; GDPR tooling in one platform — so your SaaS can bill
-          in fifteen currencies without hiring a compliance team to do it.
+          Plans, pay links, dunning and payouts, plus XRechnung and ZUGFeRD e-invoices, EU VAT and GDPR tooling. Bill in
+          fifteen currencies and meet Germany’s e-invoicing deadlines without hiring a compliance team.
         </p>
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
           <ButtonLink to={LINKS.trial}>Start Free Trial</ButtonLink>
@@ -63,7 +57,7 @@ function Hero() {
       </div>
 
       <div className="relative w-full pb-6 pl-0 sm:pl-6">
-        <BrowserFrame src={SCREENS.dashboard} alt="Billing.eu dashboard showing ARR, forecast and collected revenue" eager />
+        <BrowserFrame src={SCREENS.dashboard} alt="Subscription Billing dashboard showing ARR, forecast and collected revenue" eager />
         <StatBubble label="Annual recurring revenue" value="€284,600" className="right-3 -top-6 sm:-right-3" />
         <StatBubble label="Collected this month" value="+18.4%" className="-bottom-2 left-3 sm:left-0" />
       </div>
@@ -71,12 +65,68 @@ function Hero() {
   );
 }
 
+/* ---------------- Products ---------------- */
+
+const PRODUCTS = [
+  {
+    eyebrow: 'For SaaS & subscription businesses',
+    name: 'Subscription Billing',
+    desc: 'Run the whole subscription lifecycle, from the first pay link to the last payout.',
+    bullets: ['Flat and tiered plans, pay links', 'Smart dunning that adapts by payment method', 'Stripe, PayPal, GoCardless and Mollie in one ledger', 'EU VAT, GDPR and PSD2 tooling built in'],
+    price: 'Free for up to 25 active subscriptions',
+    to: '/subscription-billing/',
+    cta: 'Explore Subscription Billing',
+  },
+  {
+    eyebrow: 'For businesses invoicing in Germany',
+    name: 'E-Invoicing',
+    desc: 'Issue compliant e-invoices without changing your accounting software.',
+    bullets: ['XRechnung and ZUGFeRD from the same data', 'Validation against EN 16931 and German rules', 'Handover to Lexware Office, DATEV and sevdesk', 'Audit trail for every invoice'],
+    price: 'Free for 5 e-invoices a month',
+    to: '/e-invoicing/',
+    cta: 'Explore E-Invoicing',
+  },
+];
+
+function Products() {
+  return (
+    <section className="container-x pb-20 pt-6 sm:pb-24" aria-labelledby="products">
+      <h2 id="products" className="sr-only">
+        Our products
+      </h2>
+      <div className="grid gap-6 md:grid-cols-2">
+        {PRODUCTS.map((p) => (
+          <article key={p.name} className="card flex flex-col p-8 sm:p-9">
+            <p className="eyebrow">{p.eyebrow}</p>
+            <h3 className="font-display mt-4 text-[2rem] leading-tight">{p.name}</h3>
+            <p className="mt-3 text-lg leading-relaxed">{p.desc}</p>
+            <ul className="mt-6 flex-1 space-y-3">
+              {p.bullets.map((b) => (
+                <li key={b} className="flex items-start gap-3 text-fg/90">
+                  <Check size={18} className="mt-0.5 shrink-0 text-mint" aria-hidden="true" />
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-mono text-sm text-muted">{p.price}</p>
+              <Link to={p.to} className="link-mint inline-flex items-center gap-1 font-semibold">
+                {p.cta} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Industries() {
-  const chips = ['Dev tools', 'Vertical SaaS', 'Fintech', 'Data & analytics', 'Usage-based platforms'];
+  const chips = ['Vertical SaaS', 'Dev tools', 'Fintech', 'Agencies', 'Gyms & clubs', 'Education providers', 'Usage-based platforms'];
   return (
     <section className="border-t border-line">
       <div className="container-x flex flex-col items-center gap-5 py-8 text-center lg:flex-row lg:justify-between lg:text-left">
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted">Built for teams selling subscriptions in</p>
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted">Built for teams billing in</p>
         <ul className="flex flex-wrap justify-center gap-2.5">
           {chips.map((c) => (
             <li key={c} className="rounded-full border border-line px-3.5 py-1.5 text-sm text-body">
@@ -95,74 +145,80 @@ const PLATFORM = [
   { icon: AppWindow, title: 'Plans & Pay Links', desc: 'Flat or tiered pricing, custom billing intervals, and shareable checkout links with your own branding.' },
   { icon: RotateCw, title: 'Smart Dunning', desc: 'Automated retry cadence that adapts by payment method, with failed-payment alerts before customers churn.' },
   { icon: CreditCard, title: 'Multi-Gateway Payments', desc: 'Stripe, PayPal, GoCardless and Mollie behind one API, with payouts reconciled automatically.' },
+  { icon: ChartLine, title: 'Revenue Analytics', desc: 'ARR, forecast and collected revenue, subscription health, and a per-customer next-billing view.' },
+  { icon: FileCode2, title: 'XRechnung & ZUGFeRD', desc: 'Generate either e-invoice format from the same validated invoice data.' },
+  { icon: ShieldCheck, title: 'EN 16931 Validation', desc: 'Required fields, VAT and totals checked before an invoice goes out, with plain-language errors.' },
+  { icon: Plug, title: 'Accounting Handover', desc: 'Transfer e-invoices to Lexware Office, DATEV or sevdesk. Your bookkeeping stays where it is.' },
+  { icon: History, title: 'Audit Trail', desc: 'A time-stamped history of every invoice, from creation to validation to transfer.' },
   { icon: Layers, title: 'EU VAT & VIES', desc: 'Validates VAT IDs against VIES in real time and applies the right tax rate by customer region.' },
   { icon: Shield, title: 'GDPR Data Rights', desc: 'Portability exports and right-to-erasure, plus a customer-initiated deletion queue your team reviews.' },
   { icon: FileText, title: 'PSD2 Strong Auth', desc: 'Sandbox real Strong Customer Authentication flows before they ever reach a live customer.' },
-  { icon: ChartLine, title: 'Revenue Analytics', desc: 'ARR, forecast and collected revenue, subscription health, and a per-customer next-billing view.' },
   { icon: Building2, title: 'Multi-Org Console', desc: 'A platform-wide view across every organization you run, with real impersonation for support.' },
 ];
 
 function Platform() {
   return (
-    <section className="container-x py-24 sm:py-28">
-      <SectionHeader
-        eyebrow="Everything billing touches"
-        title="One platform for the whole subscription lifecycle."
-        lead="Stop stitching together a payment processor, a tax plugin, and three Zapier automations that break every time a provider changes their API. It's all one system."
-      />
-
-      <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-        {PLATFORM.map(({ icon: Icon, title, desc }) => (
-          <article key={title} className="bg-surface p-7 transition-colors hover:bg-surface-2">
-            <span className="icon-tile">
-              <Icon size={20} />
-            </span>
-            <h3 className="mt-6 text-lg font-semibold">{title}</h3>
-            <p className="mt-2.5 text-[0.9375rem] leading-relaxed">{desc}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- AI copilot (roadmap) ---------------- */
-
-const AI = [
-  { icon: ChartLine, title: 'Churn prediction', desc: 'Flags at-risk customers from real usage and payment behavior, with a risk score and the reason behind it — not a guess.' },
-  { icon: ShieldAlert, title: 'Revenue leakage detection', desc: 'Surfaces the uncollected VAT, stale paused subscriptions and failed-retry patterns quietly costing you money every month.' },
-  { icon: MessageSquare, title: 'Conversational finance assistant', desc: 'Ask about churn risk, MRR projections or recovery workflows in plain language, and get an answer grounded in your own data.' },
-];
-
-function AICopilot() {
-  return (
-    <section className="border-y border-line bg-surface py-24 sm:py-28">
-      <div className="container-x text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-violet-line bg-[#141a2a] px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-violet-soft">
-          <Loader size={13} /> In development — not live yet
-        </span>
+    <section className="border-t border-line">
+      <div className="container-x py-24 sm:py-28">
         <SectionHeader
-          className="mt-6"
-          title="An AI copilot for your revenue, built into Billing.eu."
-          lead="We're building a finance assistant that reads your real subscription data — not a demo, your actual churn, payments and tax records — so a problem surfaces before it shows up in next month's MRR, not after."
+          eyebrow="Everything billing touches"
+          title="One platform, from subscription to compliant invoice."
+          lead="Stop stitching together a payment processor, a tax plugin, an e-invoicing tool and three automations that break every time a provider changes their API."
         />
-        <div className="mt-14 grid gap-6 text-left md:grid-cols-3">
-          {AI.map(({ icon: Icon, title, desc }) => (
-            <article key={title} className="rounded-2xl border border-violet-line/70 bg-violet-card p-7">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-violet text-white">
-                <Icon size={20} />
+        <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {PLATFORM.map(({ icon: Icon, title, desc }) => (
+            <article key={title} className="bg-surface p-7 transition-colors hover:bg-surface-2">
+              <span className="icon-tile">
+                <Icon size={20} aria-hidden="true" />
               </span>
               <h3 className="mt-6 text-lg font-semibold">{title}</h3>
               <p className="mt-2.5 text-[0.9375rem] leading-relaxed">{desc}</p>
             </article>
           ))}
         </div>
-        <p className="mt-10 text-[0.9375rem] text-muted">
-          On our roadmap, not shipped yet —{' '}
-          <Link to={LINKS.earlyAccess} className="text-violet-soft underline underline-offset-4 hover:text-white">
-            tell us you want early access →
-          </Link>
-        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Renewal → e-invoice ---------------- */
+
+const RENEWAL_FLOW = [
+  { product: 'Subscription Billing', step: 'A subscription renews' },
+  { product: 'E-Invoicing', step: 'Invoice data validated against EN 16931' },
+  { product: 'E-Invoicing', step: 'XRechnung or ZUGFeRD generated' },
+  { product: 'Your accounting', step: 'Handed to Lexware Office, DATEV or sevdesk' },
+];
+
+function RenewalToInvoice() {
+  return (
+    <section className="border-t border-line bg-surface">
+      <div className="container-x py-24 sm:py-28">
+        <div className="text-center">
+          <StatusPill status="Coming soon" />
+        </div>
+        <SectionHeader
+          className="mt-5"
+          title="Every renewal becomes a compliant e-invoice."
+          lead="Today the two products run side by side. Next, Subscription Billing will hand each renewal straight to E-Invoicing, so recurring invoices to German businesses are compliant without anyone touching them."
+        />
+        <ol className="mt-14 grid gap-4 md:grid-cols-4">
+          {RENEWAL_FLOW.map((s, i) => (
+            <li key={s.step} className="relative rounded-2xl border border-line bg-canvas p-6">
+              <p className="font-mono text-xs uppercase tracking-[0.14em] text-mint">
+                {String(i + 1).padStart(2, '0')} · {s.product}
+              </p>
+              <p className="mt-3 text-lg font-semibold text-fg">{s.step}</p>
+              {i < RENEWAL_FLOW.length - 1 && (
+                <ArrowRight
+                  size={20}
+                  className="absolute -right-3.5 top-1/2 hidden -translate-y-1/2 text-mint md:block"
+                  aria-hidden="true"
+                />
+              )}
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -177,7 +233,7 @@ function ControlCenter() {
         <SectionHeader
           align="left"
           eyebrow="Subscription control center"
-          title="Every subscription's state at a glance — active, failed, or not started."
+          title="Every subscription's state at a glance: active, failed, or not started."
           lead="Estimated MRR, active accounts and failed subscriptions sit above the list, so your team opens the Billing page already knowing what needs attention today."
         />
         <CheckList
@@ -194,110 +250,70 @@ function ControlCenter() {
   );
 }
 
-/* ---------------- Steps ---------------- */
+/* ---------------- Why e-invoicing ---------------- */
 
-const STEPS = [
-  { n: '01', label: 'Connect', title: 'Connect a gateway', desc: 'Add Stripe, PayPal, GoCardless or Mollie. Keep your existing merchant account.' },
-  { n: '02', label: 'Configure', title: 'Create plans & pay links', desc: 'Flat or tiered pricing, tax rates by region, and a branded checkout link to share.' },
-  { n: '03', label: 'Collect', title: 'Get paid, automatically', desc: 'Renewals, retries, payouts and invoices run themselves. You watch the dashboard.' },
-];
-
-function Steps() {
+function WhyEInvoicing() {
   return (
     <section className="border-t border-line">
-     <div className="container-x py-24 sm:py-28">
-      <SectionHeader eyebrow="From signup to settlement" title="Live in an afternoon." />
-      <ol className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-        {STEPS.map((s) => (
-          <li key={s.n} className="border-t-2 border-mint/80 pt-7">
-            <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">
-              {s.n} / {s.label}
+      <div className="container-x py-24 sm:py-28">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+          <div>
+            <Eyebrow>German e-invoicing</Eyebrow>
+            <h2 className="font-display mt-4 text-[2rem] leading-[1.12] sm:text-[2.5rem]">A PDF is not an e-invoice.</h2>
+            <p className="mt-5 text-lg leading-relaxed">
+              An e-invoice is structured data under the European standard EN 16931, such as XRechnung or ZUGFeRD, that
+              the recipient’s software reads automatically. Businesses in Germany must already be able to receive them,
+              and issuing them becomes mandatory from 2027.
             </p>
-            <h3 className="font-display mt-4 text-[1.375rem]">{s.title}</h3>
-            <p className="mt-3 leading-relaxed">{s.desc}</p>
-          </li>
-        ))}
-      </ol>
-     </div>
-    </section>
-  );
-}
-
-/* ---------------- Testimonials ---------------- */
-
-const QUOTES: { quote: string; name: string; role: string; person: Person }[] = [
-  {
-    quote: 'We moved dunning off a cron job someone half-remembered writing. Retries now actually match how our customers pay.',
-    name: 'Priya N.',
-    role: 'Finance Lead, DataLoom',
-    person: 'priya',
-  },
-  {
-    quote: 'VAT validation at checkout alone saved us a quarter of back-and-forth with our accountant every filing period.',
-    name: 'Marco E.',
-    role: 'Co-founder, FlowStack',
-    person: 'marco',
-  },
-  {
-    quote: 'Support stopped forwarding us “please cancel my subscription” tickets. Customers just do it themselves now.',
-    name: 'Jonas A.',
-    role: 'Head of RevOps, BrightLedger',
-    person: 'jonas',
-  },
-];
-
-function Testimonials() {
-  return (
-    <section className="container-x pb-24 sm:pb-28">
-      <SectionHeader
-        eyebrow="What teams say once they're live"
-        title="One system of record, fewer surprises at renewal."
-      />
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
-        {QUOTES.map((q) => (
-          <figure key={q.name} className="card flex flex-col p-7 sm:p-8">
-            <blockquote className="flex-1 text-[1.1875rem] leading-relaxed text-fg">“{q.quote}”</blockquote>
-            <figcaption className="mt-7 flex items-center gap-3.5 border-t border-line pt-6">
-              <Avatar person={q.person} size={44} />
-              <span>
-                <span className="block font-semibold text-fg">{q.name}</span>
-                <span className="block text-sm text-muted">{q.role}</span>
-              </span>
-            </figcaption>
-          </figure>
-        ))}
+            <Link to="/compliance/" className="link-mint mt-6 inline-flex items-center gap-1">
+              Who must issue e-invoices, and when <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+          <PdfVsStructured />
+        </div>
+        <div className="mt-10">
+          <DeadlineStrip />
+        </div>
       </div>
     </section>
   );
 }
 
-/* ---------------- Metrics ---------------- */
+/* ---------------- Integrations ---------------- */
 
-const METRICS = [
-  { value: '€284,600', label: 'Annual recurring revenue' },
-  { value: '1,284', label: 'Transactions tracked' },
-  { value: '4', label: 'Payment gateways, one ledger' },
-  { value: '6', label: 'Subscription lifecycle states' },
-];
-
-function Metrics() {
+function Integrations() {
+  const groups = [
+    { label: 'Payment gateways · Subscription Billing', items: PAYMENT_GATEWAYS },
+    { label: 'Accounting software · E-Invoicing', items: ACCOUNTING.filter((a) => a.status !== 'Coming soon') },
+  ];
   return (
-    <section className="container-x py-8">
-      <div className="card rounded-3xl p-8 sm:p-12">
+    <section className="border-t border-line">
+      <div className="container-x py-20 sm:py-24">
         <SectionHeader
-          align="left"
-          eyebrow="What your dashboard looks like on day one"
-          title="Real numbers, not a vanity metric built for a screenshot."
-          lead="Every figure traces back to a real subscription, invoice or payout — the same data your finance team would reconcile by hand otherwise."
+          eyebrow="Integrations"
+          title="Works with the tools you already pay for."
+          lead="Keep your merchant accounts and your accounting software. Every integration shows its real status."
         />
-        <dl className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {METRICS.map((m) => (
-            <div key={m.label} className="flex flex-col-reverse bg-surface px-6 py-6">
-              <dt className="mt-2 text-sm text-muted">{m.label}</dt>
-              <dd className="font-mono text-3xl font-medium tracking-tight text-mint sm:text-[2.125rem]">{m.value}</dd>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {groups.map((g) => (
+            <div key={g.label} className="card p-7">
+              <h3 className="font-mono text-xs uppercase tracking-[0.16em] text-muted">{g.label}</h3>
+              <ul className="mt-5 divide-y divide-line-soft">
+                {g.items.map((i) => (
+                  <li key={i.name} className="flex items-center justify-between gap-4 py-3">
+                    <span className="font-semibold text-fg">{i.name}</span>
+                    <StatusPill status={i.status} />
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
-        </dl>
+        </div>
+        <p className="mt-8 text-center">
+          <Link to="/integrations/" className="link-mint inline-flex items-center gap-1">
+            See all integrations <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </p>
       </div>
     </section>
   );
@@ -309,62 +325,81 @@ const COMPLIANCE = [
   { tag: 'GDPR', title: 'Data rights, end to end', desc: "Article 15 portability exports and Article 17 erasure, plus a customer-facing deletion request your team approves once nothing's outstanding." },
   { tag: 'PSD2', title: 'Strong Customer Auth sandbox', desc: 'Test real SCA challenge flows against your checkout before a single live customer hits one.' },
   { tag: 'Tax', title: 'EU VAT validated at checkout', desc: 'VAT IDs are checked against VIES in real time, with the right rate applied by customer region automatically.' },
+  { tag: 'E-Inv', title: 'Ready for the 2027 mandate', desc: 'XRechnung and ZUGFeRD validated against EN 16931 before they go out, with an audit trail for every invoice.' },
 ];
 
 function Compliance() {
   return (
-    <section className="container-x grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-      <BrowserFrame
-        src={SCREENS.gdpr}
-        alt="GDPR data privacy dashboard with pending deletion requests and portability tools"
-        className="order-2 lg:order-1"
-      />
-      <div className="order-1 lg:order-2">
-        <SectionHeader
-          align="left"
-          eyebrow="Compliance, not an afterthought"
-          title="The part most billing tools bolt on later, we built in first."
-          lead="A customer's own deletion request lands in a real queue your team reviews — not a script someone runs once a year."
+    <section className="border-t border-line">
+      <div className="container-x grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+        <BrowserFrame
+          src={SCREENS.gdpr}
+          alt="GDPR data privacy dashboard with pending deletion requests and portability tools"
+          className="order-2 lg:order-1"
         />
-        <div className="mt-8 space-y-3">
-          {COMPLIANCE.map((c) => (
-            <article key={c.tag} className="flex gap-4 rounded-xl border border-line p-5">
-              <span className="mt-0.5 w-12 shrink-0 font-mono text-xs font-medium uppercase tracking-[0.12em] text-mint">
-                {c.tag}
-              </span>
-              <div>
-                <h3 className="font-semibold">{c.title}</h3>
-                <p className="mt-1.5 text-[0.9375rem] leading-relaxed">{c.desc}</p>
-              </div>
-            </article>
-          ))}
+        <div className="order-1 lg:order-2">
+          <SectionHeader
+            align="left"
+            eyebrow="Compliance, not an afterthought"
+            title="The part most billing tools bolt on later, we built in first."
+            lead="A customer's own deletion request lands in a real queue your team reviews, not a script someone runs once a year."
+          />
+          <div className="mt-8 space-y-3">
+            {COMPLIANCE.map((c) => (
+              <article key={c.tag} className="flex gap-4 rounded-xl border border-line p-5">
+                <span className="mt-0.5 w-12 shrink-0 font-mono text-xs font-medium uppercase tracking-[0.12em] text-mint">
+                  {c.tag}
+                </span>
+                <div>
+                  <h3 className="font-semibold">{c.title}</h3>
+                  <p className="mt-1.5 text-[0.9375rem] leading-relaxed">{c.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <Link to="/security/" className="link-mint mt-7 inline-flex items-center gap-1">
+            See the full Security &amp; Compliance page <ArrowRight size={18} aria-hidden="true" />
+          </Link>
         </div>
-        <Link to="/security" className="link-mint mt-7 inline-flex items-center gap-1">
-          See the full Security &amp; Compliance page <ArrowRight size={18} />
-        </Link>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- FAQ ---------------- */
+
+function Faq() {
+  return (
+    <section className="border-t border-line">
+      <div className="container-x py-20 sm:py-24">
+        <div className="mx-auto max-w-4xl">
+          <SectionHeader title="Questions, answered plainly" />
+          <div className="mt-10">
+            <FaqList items={HOME_FAQ} />
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
 export default function HomePage() {
-  usePageTitle('');
   return (
     <>
       <Hero />
+      <Products />
       <Industries />
-      <Ratings />
       <Platform />
-      <AICopilot />
+      <RenewalToInvoice />
       <ControlCenter />
-      <Steps />
-      <Testimonials />
-      <Metrics />
+      <WhyEInvoicing />
+      <Integrations />
       <Compliance />
+      <Faq />
       <CtaPanel
         eyebrow="Ready when you are"
         title="Start billing in minutes, not a quarter-long migration."
-        subtitle="Keep your existing payment gateway. Import your plans. Send your first pay link today."
+        subtitle="Keep your existing payment gateway and accounting software. Import your plans. Send your first pay link or e-invoice today."
         primary={{ label: 'Start Free Trial', to: LINKS.trial }}
         secondary={{ label: 'Talk to Sales', to: LINKS.sales }}
       />

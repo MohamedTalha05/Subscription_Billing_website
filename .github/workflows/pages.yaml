@@ -32,7 +32,8 @@ jobs:
         run: |
           npm ci
           npm run build
-          cp dist/index.html dist/404.html
+          # The build writes its own 404.html; only fall back to the app shell if it is missing.
+          [ -f dist/404.html ] || cp dist/index.html dist/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,8 +1,7 @@
-import { ButtonLink, Eyebrow, usePageTitle } from '../components/ui';
+import { ButtonLink, Eyebrow } from '../components/ui';
 import { LINKS } from '../config';
 
 export default function NotFoundPage() {
-  usePageTitle('Page not found');
   return (
     <section className="container-x py-28 text-center sm:py-40">
       <Eyebrow>404</Eyebrow>

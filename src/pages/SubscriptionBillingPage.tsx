@@ -15,7 +15,8 @@ import {
   Webhook,
   Zap,
 } from 'lucide-react';
-import { BrowserFrame, CtaPanel, SCREENS, SectionHeader, usePageTitle } from '../components/ui';
+import { BrowserFrame, ButtonLink, CtaPanel, SCREENS, SectionHeader } from '../components/ui';
+import { AICopilot, Metrics, Steps } from '../components/billing';
 import { LINKS } from '../config';
 
 type Item = { icon: LucideIcon; title: string; desc: string };
@@ -120,22 +121,47 @@ function FeatureGroup({ g }: { g: Group }) {
   );
 }
 
-export default function FeaturesPage() {
-  usePageTitle('Features');
+export default function SubscriptionBillingPage() {
   return (
     <>
       <section className="container-x py-16 sm:py-24">
         <SectionHeader
           as="h1"
-          eyebrow="Features"
+          eyebrow="Subscription Billing"
           title="Every part of the subscription lifecycle, in one ledger."
-          lead="From the first pay link to the last payout, here's exactly what Billing.eu runs for you — grounded in what the product actually does, not a roadmap slide."
+          lead="From the first pay link to the last payout, here's exactly what Subscription Billing runs for you — grounded in what the product actually does, not a roadmap slide."
         />
       </section>
+
+      <Steps />
 
       {GROUPS.map((g) => (
         <FeatureGroup key={g.n} g={g} />
       ))}
+
+      <div className="border-t border-line pt-16 sm:pt-20">
+        <Metrics />
+      </div>
+
+      <div className="mt-16 sm:mt-20">
+        <AICopilot />
+      </div>
+
+      <section className="container-x py-16 sm:py-20">
+        <div className="flex flex-col gap-6 rounded-2xl border border-mint/40 bg-highlight/30 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-9">
+          <div>
+            <p className="eyebrow">Also from MYFUNDBOX</p>
+            <h2 className="font-display mt-3 text-2xl sm:text-[1.75rem]">Invoicing businesses in Germany? Add E-Invoicing.</h2>
+            <p className="mt-3 max-w-2xl leading-relaxed">
+              Create, validate and generate XRechnung and ZUGFeRD e-invoices before the 2027 deadline, and hand them to
+              Lexware Office, DATEV or sevdesk.
+            </p>
+          </div>
+          <ButtonLink to="/e-invoicing/" variant="ghost" size="md" className="shrink-0">
+            Explore E-Invoicing
+          </ButtonLink>
+        </div>
+      </section>
 
       <div className="border-t border-line">
         <CtaPanel
@@ -144,7 +170,6 @@ export default function FeaturesPage() {
           subtitle="Start free, or book 20 minutes with someone who'll set up your first plan live on the call."
           primary={{ label: 'Start Free Trial', to: LINKS.trial }}
           secondary={{ label: 'Book a Demo', to: LINKS.demo }}
-          caption="A real person sets up the call — never a bot."
         />
       </div>
     </>

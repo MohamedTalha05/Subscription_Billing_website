@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { usePageTitle } from './ui';
 
 export type LegalSection = { id: string; title: string; body: ReactNode };
 
@@ -41,7 +40,6 @@ export function LegalPage({
   showToc?: boolean;
   closing?: ReactNode;
 }) {
-  usePageTitle(title);
   return (
     <article className="mx-auto w-full max-w-[64rem] px-4 py-14 sm:px-8 sm:py-16">
       <header>

@@ -2,11 +2,11 @@ import { B, LegalPage, P, UL, type LegalSection } from '../components/LegalPage'
 import { CONTACT } from '../config';
 
 const DEFINITIONS: [string, string][] = [
-  ['Provider', 'MYFUNDBOX GmbH, the operator of the Billing.eu platform.'],
+  ['Provider', 'MYFUNDBOX GmbH, the operator of the Subscription Billing platform.'],
   ['Customer', 'the business entity that has registered an account to use the platform.'],
   ['User', "any individual authorized by the Customer to access the platform under the Customer's account."],
   ['Account', "the Customer's registered organization workspace on the platform."],
-  ['Platform', 'the Billing.eu software-as-a-service application, including its web interface and API.'],
+  ['Platform', 'the Subscription Billing software-as-a-service application, including its web interface and API.'],
   ['Services', 'the subscription management, billing, payment-collection, invoicing, reporting and related functionality made available through the Platform.'],
   ['Subscription', 'a recurring commercial arrangement the Customer configures on the Platform between itself and its own end customers.'],
   ['Billing Period', 'the recurring interval (e.g. monthly, annually) on which a Subscription is charged.'],
@@ -23,7 +23,7 @@ const SECTIONS: Omit<LegalSection, 'id'>[] = [
       <>
         <P>
           These Terms &amp; Conditions ("AGB") govern the contractual relationship between MYFUNDBOX GmbH ("Provider",
-          "we") and the organization that registers for and uses the Billing.eu platform ("Customer", "you"). The
+          "we") and the organization that registers for and uses the Subscription Billing platform ("Customer", "you"). The
           platform is offered to businesses for their own commercial subscription billing operations.
         </P>
         <P>
@@ -307,7 +307,7 @@ const SECTIONS: Omit<LegalSection, 'id'>[] = [
     body: (
       <>
         <P>
-          <B>Cancelling the Customer's own Billing.eu subscription.</B> The Customer may cancel its Subscription to the
+          <B>Cancelling the Customer's own Subscription Billing account.</B> The Customer may cancel its Subscription to the
           Platform through its Account settings or by written notice. Cancellation becomes effective at the end of the then-current Billing Period
           unless otherwise agreed. Fees already incurred for the current Billing Period remain payable; no partial-period
           refund is implied by cancellation alone (see Section 18).
@@ -435,7 +435,7 @@ export default function TermsPage() {
     <LegalPage
       title="Terms & Conditions"
       subtitle="Allgemeine Geschäftsbedingungen (AGB)"
-      meta="Applies to use of the Billing.eu subscription billing platform"
+      meta="Applies to use of the Subscription Billing platform by MYFUNDBOX GmbH"
       sections={SECTIONS.map((s, i) => ({ ...s, id: `section-${i + 1}` }))}
     />
   );

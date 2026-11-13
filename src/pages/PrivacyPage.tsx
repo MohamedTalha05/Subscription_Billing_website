@@ -20,7 +20,7 @@ const SECTIONS: Omit<LegalSection, 'id'>[] = [
     title: '2. Scope',
     body: (
       <>
-        <P>This Privacy Policy explains how personal data is processed in connection with the Billing.eu platform, for:</P>
+        <P>This Privacy Policy explains how personal data is processed in connection with the Subscription Billing platform, for:</P>
         <UL
           items={[
             'Visitors to our marketing website;',

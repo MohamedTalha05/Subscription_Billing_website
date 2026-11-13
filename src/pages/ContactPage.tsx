@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Check, CircleCheck } from 'lucide-react';
-import { Avatar, CheckList, SCREENS, SectionHeader, usePageTitle } from '../components/ui';
+import { CheckList, ProtectedEmail, SCREENS, SectionHeader } from '../components/ui';
 import { CONTACT } from '../config';
 
 const INTENTS: Record<string, { eyebrow: string; title: string; submit: string }> = {
@@ -10,6 +10,8 @@ const INTENTS: Record<string, { eyebrow: string; title: string; submit: string }
   sales: { eyebrow: 'Talk to sales', title: 'Talk to sales about volume, migration or special pricing.', submit: 'Contact Sales' },
   signin: { eyebrow: 'Account access', title: 'Need help getting into your account?', submit: 'Send Request' },
   'early-access': { eyebrow: 'AI copilot early access', title: 'Get early access to the AI finance copilot.', submit: 'Join Early Access' },
+  integration: { eyebrow: 'Request an integration', title: 'Which payment provider or accounting software should we connect?', submit: 'Request Integration' },
+  'e-invoicing': { eyebrow: 'E-Invoicing', title: 'Get ready for German e-invoicing before the 2027 deadline.', submit: 'Talk to Us' },
 };
 const DEFAULT_INTENT = { eyebrow: 'Contact', title: 'Book a demo, or just ask a question first.', submit: 'Request a Demo' };
 
@@ -46,32 +48,6 @@ function Field({
   );
 }
 
-function CopyEmail() {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(CONTACT.publicEmail);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* clipboard unavailable — the address is still selectable text */
-    }
-  };
-  return (
-    <div className="mt-6 flex items-center justify-between rounded-lg border border-line bg-canvas px-4 py-3.5">
-      <span className="select-all font-mono text-fg">{CONTACT.publicEmail}</span>
-      <button type="button" onClick={copy} className="inline-flex items-center gap-1 text-sm font-semibold text-mint hover:text-mint-hover">
-        {copied ? (
-          <>
-            <Check size={14} /> Copied
-          </>
-        ) : (
-          'Copy'
-        )}
-      </button>
-    </div>
-  );
-}
 
 type Errors = Partial<Record<'firstName' | 'lastName' | 'email' | 'company', string>>;
 
@@ -161,7 +137,6 @@ function ContactForm({ submitLabel }: { submitLabel: string }) {
 }
 
 export default function ContactPage() {
-  usePageTitle('Contact');
   const [params] = useSearchParams();
   const intent = INTENTS[params.get('intent') ?? ''] ?? DEFAULT_INTENT;
 
@@ -184,24 +159,12 @@ export default function ContactPage() {
       <section className="container-x grid items-start gap-8 py-14 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
         <div className="order-2 space-y-5 lg:order-1">
           <article className="card p-8">
-            <h2 className="font-display text-xl">Who you'll talk to</h2>
+            <h2 className="font-display text-xl">Email us</h2>
             <p className="mt-3 text-lg leading-relaxed">
-              Not a routing queue — a demo request goes straight to someone who actually sets up accounts.
+              For support with your account, billing, payments or e-invoices, and for demos, pricing or migration
+              questions, write to us. A person replies within one business day.
             </p>
-            <ul className="mt-6 space-y-4">
-              {[
-                { person: 'priya' as const, name: 'Priya N.', role: 'Onboarding' },
-                { person: 'marco' as const, name: 'Marco E.', role: 'Solutions' },
-              ].map((p) => (
-                <li key={p.name} className="flex items-center gap-4">
-                  <Avatar person={p.person} size={52} />
-                  <span>
-                    <span className="block text-lg font-semibold text-fg">{p.name}</span>
-                    <span className="block text-muted">{p.role}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <ProtectedEmail />
           </article>
 
           <article className="card p-8">
@@ -216,19 +179,12 @@ export default function ContactPage() {
             />
             <img
               src={SCREENS.dashboard}
-              alt="Billing.eu dashboard preview"
+              alt="Subscription Billing dashboard preview"
+              width={595}
+              height={356}
               loading="lazy"
-              className="mt-7 w-full rounded-lg border border-line bg-white"
+              className="mt-7 h-auto w-full rounded-lg border border-line bg-white"
             />
-          </article>
-
-          <article className="card p-8">
-            <h2 className="font-display text-xl">Prefer email?</h2>
-            <p className="mt-3 text-lg leading-relaxed">
-              Reach the team directly — this address is shown as text, not a link, since mail links don't always work
-              reliably from every page.
-            </p>
-            <CopyEmail />
           </article>
         </div>
 

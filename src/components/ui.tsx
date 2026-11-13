@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { PUBLIC_EMAIL, PUBLIC_EMAIL_TEXT } from '../config';
+import { useLang } from '../i18n';
 import { Link } from 'react-router-dom';
 import { Check, Star } from 'lucide-react';
 
@@ -103,13 +105,83 @@ export function SectionHeader({
   );
 }
 
-export function usePageTitle(title: string) {
-  useEffect(() => {
-    document.title = title ? `${title} · Subscription Billing` : 'Subscription Billing — Recurring billing for SaaS';
-  }, [title]);
+/* ---------- Protected email ---------- */
+
+/**
+ * Shows the support address in the "[at] / [dot]" form that people can read
+ * but address harvesters don't match. The real address and its mailto: link
+ * are only built in the browser after a visitor clicks, so neither the
+ * prerendered HTML nor a robot that runs JavaScript without clicking sees it.
+ */
+export function ProtectedEmail({ compact = false }: { compact?: boolean }) {
+  const de = useLang() === 'de';
+  const [address, setAddress] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const reveal = () => setAddress([PUBLIC_EMAIL.user, PUBLIC_EMAIL.domain.join('.')].join(String.fromCharCode(64)));
+
+  const copy = async () => {
+    if (!address) return;
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable: the address is still selectable text */
+    }
+  };
+
+  if (compact) {
+    return address ? (
+      <a href={`mailto:${address}`} className="transition hover:text-fg" rel="nofollow">
+        {address}
+      </a>
+    ) : (
+      <span>
+        {PUBLIC_EMAIL_TEXT}{' '}
+        <button type="button" onClick={reveal} className="text-mint underline-offset-4 hover:underline">
+          {de ? 'Anzeigen' : 'Show'}
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-canvas px-4 py-3.5">
+      {address ? (
+        <a href={`mailto:${address}`} rel="nofollow" className="break-all font-mono text-fg underline-offset-4 hover:text-mint hover:underline">
+          {address}
+        </a>
+      ) : (
+        <span className="break-all font-mono text-fg">{PUBLIC_EMAIL_TEXT}</span>
+      )}
+      {address ? (
+        <button type="button" onClick={copy} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-mint hover:text-mint-hover">
+          {copied ? (
+            <>
+              <Check size={14} /> {de ? 'Kopiert' : 'Copied'}
+            </>
+          ) : (
+            de ? 'Kopieren' : 'Copy'
+          )}
+        </button>
+      ) : (
+        <button type="button" onClick={reveal} className="shrink-0 text-sm font-semibold text-mint hover:text-mint-hover">
+          {de ? 'E-Mail-Adresse anzeigen' : 'Show email address'}
+        </button>
+      )}
+    </div>
+  );
 }
 
 /* ---------- Product screenshots ---------- */
+
+/** Intrinsic pixel sizes, so the browser reserves space before the image loads (no layout shift). */
+const SCREEN_SIZES: Record<string, { width: number; height: number }> = {
+  '/screens/dashboard.webp': { width: 595, height: 356 },
+  '/screens/billing.webp': { width: 1174, height: 718 },
+  '/screens/gdpr.webp': { width: 1466, height: 900 },
+};
 
 export function BrowserFrame({
   src,
@@ -134,9 +206,12 @@ export function BrowserFrame({
       <img
         src={src}
         alt={alt}
+        width={SCREEN_SIZES[src]?.width}
+        height={SCREEN_SIZES[src]?.height}
         loading={eager ? 'eager' : 'lazy'}
+        fetchPriority={eager ? 'high' : undefined}
         decoding="async"
-        className="block w-full bg-white"
+        className="block h-auto w-full bg-white"
       />
     </figure>
   );
@@ -179,17 +254,9 @@ export function Avatar({ person, size = 56, ring = false }: { person: Person; si
   );
 }
 
+/** Caption under a call to action. The illustrated faces were removed with the placeholder team names. */
 export function AvatarStack({ caption }: { caption: string }) {
-  return (
-    <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <div className="flex -space-x-3">
-        {(['priya', 'marco', 'jonas'] as const).map((p) => (
-          <Avatar key={p} person={p} size={40} ring />
-        ))}
-      </div>
-      <p className="text-[0.95rem] text-body">{caption}</p>
-    </div>
-  );
+  return <p className="mt-10 text-[0.95rem] text-body">{caption}</p>;
 }
 
 /* ---------- Lists ---------- */
