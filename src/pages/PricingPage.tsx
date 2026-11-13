@@ -89,7 +89,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
 type Cell = boolean | string;
 const COMPARISON: { group: string; rows: [string, Cell, Cell, Cell][] }[] = [
-  { group: 'Subscribers', rows: [['Active subscriptions', '25', '500', 'Unlimited']] },
+  { group: 'Subscribers', rows: [['Active subscriptions', '25', '100', '250']] },
   {
     group: 'Security',
     rows: [

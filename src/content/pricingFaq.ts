@@ -9,7 +9,7 @@ export type Faq = { q: string; a: string };
 export const PRICING_FAQ: Faq[] = [
   {
     q: 'How is Subscription Billing priced?',
-    a: 'Subscription Billing is priced in flat monthly tiers based on how many active subscriptions you manage: Free covers up to 25, Professional (€9 a month) covers up to 500, and Advanced (€19 a month) has no limit. You never pay a percentage of the revenue you process.',
+    a: 'Subscription Billing is priced in flat monthly tiers based on how many active subscriptions you manage: Free covers up to 25, Professional (€9 a month) covers up to 100, and Advanced (€19 a month) covers up to 250. You never pay a percentage of the revenue you process.',
   },
   {
     q: 'Is there a setup fee?',

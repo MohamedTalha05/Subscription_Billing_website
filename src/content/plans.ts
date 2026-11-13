@@ -35,13 +35,13 @@ export const PLANS: Plan[] = [
   },
   {
     name: 'Professional',
-    desc: 'For a SaaS scaling past its first few hundred customers.',
+    desc: 'For a SaaS growing past its first paying customers.',
     price: { monthly: 9, annual: 7.29 },
-    limit: 'Up to 500 active subscriptions',
+    limit: 'Up to 100 active subscriptions',
     popular: true,
     cta: { label: 'Start Free Trial', to: LINKS.trial },
     features: [
-      'Up to 500 active subscriptions',
+      'Up to 100 active subscriptions',
       'Multiple payment gateways',
       'Tax, invoicing & sales integrations',
       'Smart dunning management',
@@ -52,12 +52,12 @@ export const PLANS: Plan[] = [
   },
   {
     name: 'Advanced',
-    desc: 'For platforms that have outgrown subscriber limits entirely.',
+    desc: 'For platforms managing a larger subscriber base.',
     price: { monthly: 19, annual: 15.39 },
-    limit: 'Unlimited active subscriptions',
-    cta: { label: 'Talk to Sales', to: LINKS.sales },
+    limit: 'Up to 250 active subscriptions',
+    cta: { label: 'Try Free', to: LINKS.trial },
     features: [
-      'Unlimited active subscriptions',
+      'Up to 250 active subscriptions',
       'Multiple payment gateways',
       'Tax, invoicing & sales integrations',
       'Smart dunning management',
