@@ -144,7 +144,7 @@ export const GUIDES: Guide[] = [
         ],
       },
     ],
-    related: ['german-e-invoicing-what-businesses-need-to-know', 'xrechnung-vs-zugferd', 'prepare-your-saas-for-german-e-invoicing'],
+    related: ['german-e-invoicing-what-businesses-need-to-know', 'xrechnung-vs-zugferd', 'german-e-invoicing-updates-2027'],
   },
   {
     slug: 'how-e-invoicing-works-with-accounting-software',

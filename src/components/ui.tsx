@@ -12,21 +12,24 @@ export function SmartLink({
   className,
   children,
   onClick,
+  hrefLang,
 }: {
   to: string;
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  /** Language of the linked page, when it differs from the current page's. */
+  hrefLang?: string;
 }) {
   if (/^[a-z]+:/i.test(to)) {
     return (
-      <a href={to} className={className} onClick={onClick}>
+      <a href={to} className={className} onClick={onClick} hrefLang={hrefLang}>
         {children}
       </a>
     );
   }
   return (
-    <Link to={to} className={className} onClick={onClick}>
+    <Link to={to} className={className} onClick={onClick} hrefLang={hrefLang}>
       {children}
     </Link>
   );

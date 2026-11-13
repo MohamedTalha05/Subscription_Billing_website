@@ -15,6 +15,12 @@ const COPY = {
   },
 };
 
+const DE_LINKS = [
+  { to: '/de/e-rechnung/', label: 'E-Rechnung' },
+  { to: '/de/e-rechnungspflicht/', label: 'E-Rechnungspflicht' },
+  { to: '/de/e-rechnung-fuer-kmu/', label: 'E-Rechnung für KMU' },
+];
+
 export function Footer() {
   const lang = useLang();
   const tr = (label: string) => (lang === 'de' ? NAV_DE[label]?.label ?? label : label);
@@ -55,6 +61,17 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {CONTACT.company} · Subscription Billing
           </span>
+          {lang === 'en' && (
+            // Sitewide links to the German pages so crawlers and German readers find them from any page.
+            <nav aria-label="Auf Deutsch" lang="de" className="flex flex-wrap gap-x-4 gap-y-1">
+              <span>Auf Deutsch:</span>
+              {DE_LINKS.filter((l) => isLive(l.to)).map((l) => (
+                <SmartLink key={l.to} to={l.to} hrefLang="de" className="underline-offset-2 transition hover:text-fg hover:underline">
+                  {l.label}
+                </SmartLink>
+              ))}
+            </nav>
+          )}
           <span>{COPY[lang].tagline}</span>
         </div>
       </div>
