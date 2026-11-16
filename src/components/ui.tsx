@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import { PUBLIC_EMAIL, PUBLIC_EMAIL_TEXT } from '../config';
+import { LINKS, PUBLIC_EMAIL, PUBLIC_EMAIL_TEXT } from '../config';
 import { useLang } from '../i18n';
 import { Link } from 'react-router-dom';
 import { Check, Star } from 'lucide-react';
 
 /* ---------- Links ---------- */
+
+/** Origin of the product app (sign-in and sign-up). Links there open in a new tab so the website stays open. */
+const APP_ORIGIN = new URL(LINKS.signIn).origin;
+const opensInNewTab = (to: string) => {
+  try {
+    return new URL(to).origin === APP_ORIGIN;
+  } catch {
+    return false;
+  }
+};
 
 /** Internal paths use the router; anything with a protocol is a normal anchor. */
 export function SmartLink({
@@ -23,7 +33,13 @@ export function SmartLink({
 }) {
   if (/^[a-z]+:/i.test(to)) {
     return (
-      <a href={to} className={className} onClick={onClick} hrefLang={hrefLang}>
+      <a
+        href={to}
+        className={className}
+        onClick={onClick}
+        hrefLang={hrefLang}
+        {...(opensInNewTab(to) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
         {children}
       </a>
     );
