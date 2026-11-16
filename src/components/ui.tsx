@@ -6,7 +6,10 @@ import { Check, Star } from 'lucide-react';
 
 /* ---------- Links ---------- */
 
-/** Origin of the product app (sign-in and sign-up). Links there open in a new tab so the website stays open. */
+/**
+ * Origin of the product app (sign-in and sign-up). Links there open in a new tab so the website stays open,
+ * and carry rel="nofollow" so crawlers don't index the app's login/signup screens (which share one <title>).
+ */
 const APP_ORIGIN = new URL(LINKS.signIn).origin;
 const opensInNewTab = (to: string) => {
   try {
@@ -38,7 +41,7 @@ export function SmartLink({
         className={className}
         onClick={onClick}
         hrefLang={hrefLang}
-        {...(opensInNewTab(to) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        {...(opensInNewTab(to) ? { target: '_blank', rel: 'nofollow noopener noreferrer' } : {})}
       >
         {children}
       </a>
@@ -98,6 +101,7 @@ export function SectionHeader({
   align = 'center',
   as: Tag = 'h2',
   className = '',
+  id,
 }: {
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
@@ -105,6 +109,8 @@ export function SectionHeader({
   align?: 'center' | 'left';
   as?: 'h1' | 'h2';
   className?: string;
+  /** Id for the heading, e.g. so a section can reference it with aria-labelledby. */
+  id?: string;
 }) {
   const centered = align === 'center';
   const size =
@@ -114,7 +120,7 @@ export function SectionHeader({
   return (
     <div className={`${centered ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'} ${className}`}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <Tag className={`font-display ${eyebrow ? 'mt-4' : ''} ${size}`}>{title}</Tag>
+      <Tag id={id} className={`font-display ${eyebrow ? 'mt-4' : ''} ${size}`}>{title}</Tag>
       {lead && (
         <p className={`mt-5 text-lg leading-relaxed sm:text-[1.1875rem] ${centered ? 'mx-auto max-w-2xl' : 'max-w-2xl'}`}>
           {lead}

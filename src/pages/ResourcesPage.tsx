@@ -2,8 +2,32 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CtaPanel, SectionHeader } from '../components/ui';
 import { formatDate } from '../components/einvoicing';
-import { GUIDES, guidePath } from '../content/guides';
+import { GUIDES, guideBySlug, guidePath } from '../content/guides';
 import { LINKS } from '../config';
+
+/** Common starting questions, each pointing at the guide that answers it. */
+const READING_PATHS = [
+  {
+    slug: 'german-e-invoicing-what-businesses-need-to-know',
+    question: 'Does the e-invoicing mandate apply to my business?',
+    answer: 'Start with the overview: who has to receive and issue e-invoices, from when, and which invoices are covered.',
+  },
+  {
+    slug: 'xrechnung-vs-zugferd',
+    question: 'Should we send XRechnung or ZUGFeRD?',
+    answer: 'Compare the two formats, when customers ask for one or the other, and why both can come from the same invoice data.',
+  },
+  {
+    slug: 'prepare-your-saas-for-german-e-invoicing',
+    question: 'We run a SaaS. What do we need to change?',
+    answer: 'A practical checklist for subscription businesses that issue an invoice on every renewal.',
+  },
+  {
+    slug: 'how-e-invoicing-works-with-accounting-software',
+    question: 'Do we have to replace our accounting software?',
+    answer: 'No. See how an e-invoicing step hands invoices to Lexware Office, DATEV or sevdesk, and what stays the same.',
+  },
+];
 
 export default function ResourcesPage() {
   const [featured, ...rest] = GUIDES;
@@ -12,7 +36,7 @@ export default function ResourcesPage() {
       <section className="container-x pb-12 pt-16 sm:pt-24">
         <SectionHeader
           as="h1"
-          eyebrow="Guides"
+          eyebrow="Resources & guides"
           title="E-invoicing guides, reviewed when the rules change."
           lead="Practical articles on German e-invoicing, XRechnung, ZUGFeRD, EN 16931 and billing compliance. Each guide shows when it was last checked."
         />
@@ -45,6 +69,47 @@ export default function ResourcesPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="container-x pb-20 sm:pb-24" aria-labelledby="start-here">
+        <SectionHeader
+          id="start-here"
+          eyebrow="Where to start"
+          title="Pick the guide that matches your question."
+          lead="The guides build on each other, but you don't need to read them in order. Start with the one closest to the decision in front of you."
+        />
+        <ul className="mt-10 grid gap-4 md:grid-cols-2">
+          {READING_PATHS.map((p) => {
+            const g = guideBySlug(p.slug);
+            if (!g) return null;
+            return (
+              <li key={p.slug} className="card p-7">
+                <h3 className="font-display text-xl leading-snug">{p.question}</h3>
+                <p className="mt-3 leading-relaxed">{p.answer}</p>
+                <Link to={guidePath(g.slug)} className="link-mint mt-4 inline-flex items-center gap-1 font-semibold">
+                  {g.title} <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-12 max-w-3xl space-y-4 text-lg leading-relaxed">
+          <h2 className="font-display text-2xl text-fg">How these guides are kept current</h2>
+          <p>
+            German e-invoicing rules are phased in over several years and clarified in letters from the Federal Ministry
+            of Finance, so a guide that was accurate last year can drift. Every guide shows the date it was last
+            reviewed, and the dates, thresholds and transition periods themselves live in one place: the{' '}
+            <Link to="/compliance/" className="link-mint">
+              e-invoicing mandate timeline
+            </Link>
+            , which the guides link to rather than repeat.
+          </p>
+          <p>
+            The guides explain how the rules work in practice. They are not legal or tax advice; for decisions about
+            your own business, check with your tax advisor.
+          </p>
+        </div>
       </section>
 
       <CtaPanel

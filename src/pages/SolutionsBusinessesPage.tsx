@@ -25,7 +25,7 @@ const ICONS = [FilePlus2, Users, ShieldCheck, FileCode2, Plug, ListChecks, Histo
 const COPY = {
   en: {
     eyebrow: 'For SMEs & service businesses',
-    title: 'Your simple e-invoicing workspace.',
+    title: 'Your simple e-invoicing workspace for businesses.',
     lead: 'Issue compliant e-invoices without buying a bigger accounting package. Keep the software you and your tax advisor already use.',
     start: 'Start Free',
     demo: 'Book a Demo',

@@ -15,6 +15,26 @@ const INTENTS: Record<string, { eyebrow: string; title: string; submit: string }
 };
 const DEFAULT_INTENT = { eyebrow: 'Contact', title: 'Book a demo, or just ask a question first.', submit: 'Request a Demo' };
 
+/** Guidance shown below the form: what people typically contact us about and what helps us answer. */
+const CONTACT_TOPICS = [
+  {
+    heading: 'Demos and trials',
+    body: 'Tell us how you bill today, whether that is spreadsheets, a payment provider dashboard or another billing tool, and roughly how many active subscriptions you have. The demo is a 20-minute call built around your setup, and if you want, we set up your first plan live so you leave with something working.',
+  },
+  {
+    heading: 'Pricing and migration',
+    body: 'If you are moving from another system, mention which one and how many customers and plans you would bring over. For larger volumes or special requirements, describe them briefly and we will come back with options rather than a generic quote.',
+  },
+  {
+    heading: 'German e-invoicing',
+    body: 'Let us know whether you need to receive e-invoices, issue them, or both, and whether any customers are public bodies that ask for XRechnung. Our guides and the mandate timeline cover the rules; the conversation is about how they apply to your invoices and when you need to be ready.',
+  },
+  {
+    heading: 'Integrations and account support',
+    body: 'Name the payment provider or accounting software you use, such as Stripe, PayPal, Lexware Office, DATEV or sevdesk, so we can tell you what is connected today and what is planned. For help with an existing account, include the email address you sign in with, and never send passwords or card details.',
+  },
+];
+
 const VOLUMES = ['Pre-launch', '1–100', '100–1,000', '1,000–10,000', '10,000+'];
 
 const inputClass =
@@ -190,6 +210,24 @@ export default function ContactPage() {
 
         <div className="order-1 lg:sticky lg:top-28 lg:order-2">
           <ContactForm key={intent.submit} submitLabel={intent.submit} />
+        </div>
+      </section>
+
+      <section className="container-x pb-20 sm:pb-24" aria-labelledby="contact-topics">
+        <SectionHeader
+          id="contact-topics"
+          align="left"
+          eyebrow="Before you write"
+          title="What we can help with, and what to include."
+          lead="A few details in your first message save a round of questions and let us reply with something useful, not just a calendar link."
+        />
+        <div className="mt-10 grid gap-x-12 gap-y-8 text-lg leading-relaxed md:grid-cols-2">
+          {CONTACT_TOPICS.map((t) => (
+            <article key={t.heading}>
+              <h3 className="font-display text-xl text-fg">{t.heading}</h3>
+              <p className="mt-3">{t.body}</p>
+            </article>
+          ))}
         </div>
       </section>
     </>

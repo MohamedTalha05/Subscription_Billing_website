@@ -95,7 +95,7 @@ export const SITE_ROUTES: RouteMeta[] = [
   {
     path: '/compliance/',
     name: 'E-invoicing mandate',
-    title: 'German E-Invoicing Mandate 2025–2028: Deadlines & Rules',
+    title: 'German E-Invoicing Mandate: Compliance Deadlines 2025–2028',
     description:
       'Who must issue e-invoices in Germany and when: receiving since 2025, issuing from 2027 above €800,000 revenue, all businesses from 2028. Formats explained.',
     llms: 'Trust & compliance',
@@ -152,7 +152,7 @@ export const SITE_ROUTES: RouteMeta[] = [
   {
     path: '/solutions/businesses/',
     name: 'For SMEs & service businesses',
-    title: 'E-Invoicing for SMEs, Agencies and Freelancers in Germany',
+    title: 'E-Invoicing for Businesses: SMEs, Agencies & Freelancers',
     description:
       'A simple e-invoicing workspace for German SMEs and service businesses: create, check and send XRechnung and ZUGFeRD without new accounting software.',
     llms: 'Solutions',
@@ -173,7 +173,7 @@ export const SITE_ROUTES: RouteMeta[] = [
   {
     path: '/resources/',
     name: 'Guides',
-    title: 'E-Invoicing Guides: XRechnung, ZUGFeRD, EN 16931',
+    title: 'E-Invoicing Resources: Guides to XRechnung & ZUGFeRD',
     description:
       'Practical guides to German e-invoicing: what counts as an e-invoice, XRechnung vs ZUGFeRD, the 2027 deadline and preparing your SaaS.',
     llms: 'Guides',
@@ -240,7 +240,7 @@ export const SITE_ROUTES: RouteMeta[] = [
   {
     path: '/cookies/',
     name: 'Cookie Policy',
-    title: 'Cookie Policy | Subscription Billing',
+    title: 'Cookie Policy: Which Cookies We Use | Subscription Billing',
     description:
       'Cookies on the Subscription Billing website: none of its own, no tracking or advertising cookies and no third-party services. Fonts are served locally.',
     llms: 'Legal',

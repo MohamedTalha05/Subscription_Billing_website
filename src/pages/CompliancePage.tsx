@@ -23,7 +23,7 @@ import { LINKS } from '../config';
 
 const COPY = {
   en: {
-    eyebrow: 'E-invoicing mandate',
+    eyebrow: 'E-invoicing mandate & compliance',
     title: 'E-invoicing in Germany: who must do what, and when.',
     lead: 'What an e-invoice is, which formats and standards count, and what businesses and software providers need to prepare for the 2027 and 2028 deadlines.',
     lastReviewed: 'Last reviewed',

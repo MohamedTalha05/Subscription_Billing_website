@@ -135,12 +135,42 @@ export const GUIDES: Guide[] = [
         heading: 'A PDF is a picture',
         paragraphs: [
           'A PDF shows an invoice to a person. Software has to guess what each number means, which is why manual entry and OCR are still common.',
+          'That is true even for a PDF exported straight from a billing tool rather than scanned. An amount at the bottom of the page might be the net total, the gross total or the amount still due. A person can tell from the label next to it; software has to infer it, and every inference is a chance for an error that someone then corrects by hand.',
         ],
       },
       {
         heading: 'Structured means defined fields',
         paragraphs: [
           "A structured e-invoice carries each value in a defined field: invoice number, VAT category, net amount, due date. The recipient's software reads it without interpretation.",
+          'Those fields follow the European standard EN 16931, which defines the core content of an electronic invoice and the business rules it must pass: totals have to add up, every line needs a VAT category, and a reverse-charge invoice has to carry the right VAT IDs. Because sender and recipient use the same definitions, an invoice can be checked automatically before it is sent and booked automatically when it arrives.',
+        ],
+      },
+      {
+        heading: 'What German law counts as an e-invoice',
+        paragraphs: [
+          'Since 1 January 2025, German VAT law defines an e-invoice as an invoice that is issued, transmitted and received in a structured electronic format that allows electronic processing and follows EN 16931. A PDF sent by email does not meet that definition. Like paper, it counts as an "other invoice", which is only allowed for domestic B2B sales during the transition periods.',
+          'Formats that meet the definition include XRechnung and ZUGFeRD (from version 2.0.1) in its EN 16931-compliant profiles. The ZUGFeRD MINIMUM and BASIC WL profiles do not carry enough invoice data and do not count as e-invoices.',
+        ],
+      },
+      {
+        heading: 'Where ZUGFeRD fits',
+        paragraphs: [
+          'ZUGFeRD is a hybrid: a PDF/A-3 file that a person can read, with the structured XML embedded inside it. It looks like the PDFs your customers already receive, which makes it a gentle first step.',
+          'But it is the embedded XML that counts. If the visible PDF and the XML ever disagree, the XML takes precedence, so it has to be generated from correct, validated data rather than attached as an afterthought.',
+        ],
+      },
+      {
+        heading: 'Why it matters beyond compliance',
+        paragraphs: [
+          'For the recipient, structured data removes retyping and OCR corrections: invoices can be matched to orders and booked without manual entry. For the sender, invoices that pass validation before they go out are rejected less often, which means fewer corrections and faster payment.',
+          'The structured file is also the original invoice for record-keeping. Archive the XML, or the ZUGFeRD file with its embedded XML, not a printout or an image of it.',
+        ],
+      },
+      {
+        heading: 'How to tell what you send today',
+        paragraphs: [
+          'If your invoices come from a word processor, a spreadsheet or a plain PDF export, they are not e-invoices yet. To change that, use software that produces XRechnung or ZUGFeRD and validates each invoice against EN 16931 before it is sent.',
+          'E-Invoicing by MYFUNDBOX does both from one set of invoice data, and explains every validation error in plain language so you can fix it before your customer sees it.',
         ],
       },
     ],
@@ -159,12 +189,36 @@ export const GUIDES: Guide[] = [
         heading: 'Two jobs, two systems',
         paragraphs: [
           'E-invoicing creates, validates, generates and exchanges invoices. Accounting software books them, runs tax workflows and produces reports.',
+          'The two overlap less than it seems. Producing a compliant e-invoice depends on strict data rules and validation; booking it depends on a chart of accounts, VAT reporting and year-end processes. Most accounting tools were built for the second job, which is why many businesses add a dedicated e-invoicing step instead of replacing software their accountant already knows.',
+        ],
+      },
+      {
+        heading: 'The flow, step by step',
+        paragraphs: [
+          'Create: the invoice is entered once, with seller and buyer details, line items, VAT, discounts, payment terms and references such as a purchase order number or a Leitweg-ID for public-sector customers.',
+          'Validate: before anything is sent, the invoice is checked against EN 16931, German e-invoicing rules and the required invoice details under § 14 UStG. Errors are flagged while they are still cheap to fix.',
+          'Generate and deliver: the validated data becomes an XRechnung XML file or a ZUGFeRD PDF with embedded XML, and goes to your customer.',
+          'Transfer: the invoice and its structured data are handed to your accounting software, where bookkeeping takes over.',
         ],
       },
       {
         heading: 'Where the handover happens',
         paragraphs: [
           'After generation, the invoice and its data are transferred to the connected accounting system, such as Lexware Office, DATEV or sevdesk. From there, bookkeeping and tax processes run as they do today, depending on your provider and setup.',
+          'Because the accounting system receives structured data rather than a PDF, the invoice number, amounts, VAT categories and customer details arrive in fields, not in a document someone has to read and retype. Each booking can be traced back to the validated original.',
+        ],
+      },
+      {
+        heading: 'What stays where it is',
+        paragraphs: [
+          'E-invoicing does not replace your accounting software, and it does not file anything with the tax office. Bookings, VAT returns and annual financial statements stay in your accounting system and are prepared the way they are today. If a tax advisor does your books, they keep working in the system they already use.',
+        ],
+      },
+      {
+        heading: 'Before you connect the two',
+        paragraphs: [
+          'A few questions settle most setups: which accounting system and plan you use; who books your invoices, you or your tax advisor; whether any customers are public bodies that require XRechnung with a Leitweg-ID; and which system should hold the archived original of each invoice.',
+          'The current connection status for Lexware Office, DATEV and sevdesk is listed on the integrations page. If your system is not there yet, you can request it from the contact page.',
         ],
       },
     ],
