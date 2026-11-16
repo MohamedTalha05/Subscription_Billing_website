@@ -103,7 +103,7 @@ const COMPARISON: { group: string; rows: [string, Cell, Cell, Cell][] }[] = [
       ['Hybrid billing (one-off + recurring)', true, true, true],
       ['Customer import & customer portal', true, true, true],
       ['Automated invoices', true, true, true],
-      ['Custom domain & brand control', false, true, true],
+      ['Custom domain & brand control', false, false, true],
     ],
   },
   { group: 'Discounts', rows: [['Coupons & discounts', false, false, true]] },
@@ -121,6 +121,14 @@ const COMPARISON: { group: string; rows: [string, Cell, Cell, Cell][] }[] = [
       ['Multiple payment gateways', true, true, true],
       ['Payment links & embeddable checkout', true, true, true],
       ['Dunning & refund management', true, true, true],
+      ['Smart dunning', false, true, true],
+    ],
+  },
+  {
+    group: 'Integrations',
+    rows: [
+      ['Accounting software integration', false, true, true],
+      ['REST API & webhooks', false, false, true],
     ],
   },
   { group: 'Support', rows: [['Support level', 'Email & chat', 'Email & chat', 'Dedicated']] },
