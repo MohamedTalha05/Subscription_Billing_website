@@ -1,7 +1,7 @@
 import { LINKS } from '../config';
 
 /**
- * Subscription Billing plans. Shared by the pricing page and the structured
+ * Subscription Billing plans, with e-invoicing included in every plan. Shared by the pricing page and the structured
  * data (JSON-LD) so search engines and AI assistants see the same prices as
  * visitors do.
  *
@@ -27,7 +27,8 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 25 active subscriptions',
       'Multiple payment gateways',
-      'Tax, e-invoicing & sales integrations',
+      'E-invoicing: XRechnung & ZUGFeRD',
+      'Tax & sales integrations',
       'Dunning management',
       'Email & chat support',
     ],
@@ -42,7 +43,8 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 100 active subscriptions',
       'Multiple payment gateways',
-      'Tax, e-invoicing & sales integrations',
+      'E-invoicing: XRechnung & ZUGFeRD',
+      'Tax & sales integrations',
       'Accounting software integration',
       'Smart dunning management',
       'Email & chat support',
@@ -57,7 +59,8 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 250 active subscriptions',
       'Multiple payment gateways',
-      'Tax, e-invoicing & sales integrations',
+      'E-invoicing: XRechnung & ZUGFeRD',
+      'Tax & sales integrations',
       'Accounting software integration',
       'Smart dunning management',
       'REST API & webhooks',
@@ -66,9 +69,3 @@ export const PLANS: Plan[] = [
     ],
   },
 ];
-
-export const HIGH_VOLUME = {
-  label: 'Processing over €100k a month',
-  price: 499,
-  desc: 'A 250k/month package is available at €499/month.',
-};

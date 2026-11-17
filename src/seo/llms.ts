@@ -3,7 +3,7 @@
  * sentences, so each fact names the product and stands on its own.
  * Prices come from the same plan data as the pricing page.
  */
-import { HIGH_VOLUME, PLANS } from '../content/plans';
+import { PLANS } from '../content/plans';
 import { EINVOICING_PLANS, MANDATE_REVIEWED, REVENUE_THRESHOLD } from '../content/eInvoicing';
 import { SITE, absoluteUrl } from './site';
 
@@ -19,7 +19,6 @@ export function llmsFacts(): string[] {
   return [
     `${SITE.fullName} is operated by ${SITE.company.legalName}, ${SITE.company.city}, Germany. Contact the team through the contact page: ${absoluteUrl('/contact/')}.`,
     `Subscription Billing plans: ${tiers}. All plans are month-to-month with no setup fee; prices exclude VAT.`,
-    `${HIGH_VOLUME.label}: ${HIGH_VOLUME.desc}`,
     'Subscription Billing connects Stripe, PayPal, GoCardless and Mollie and reconciles their payouts in one settlement ledger.',
     'Subscription Billing includes smart dunning: failed payments are retried on a schedule that can differ by payment method (card, SEPA direct debit, wallet).',
     'Subscription Billing validates EU VAT IDs against the VIES registry in real time at checkout and applies the tax rate for the customer’s country, including B2B reverse charge.',
