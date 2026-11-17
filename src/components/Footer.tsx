@@ -16,9 +16,9 @@ const COPY = {
 };
 
 const DE_LINKS = [
-  { to: '/de/e-rechnung/', label: 'E-Rechnung' },
-  { to: '/de/e-rechnungspflicht/', label: 'E-Rechnungspflicht' },
-  { to: '/de/e-rechnung-fuer-kmu/', label: 'E-Rechnung für KMU' },
+  { to: '/de/e-rechnung/', label: 'E-Invoicing' },
+  { to: '/de/e-rechnungspflicht/', label: 'E-Invoicing Mandate' },
+  { to: '/de/e-rechnung-fuer-kmu/', label: 'E-Invoicing for SMEs' },
 ];
 
 export function Footer() {
@@ -63,8 +63,8 @@ export function Footer() {
           </span>
           {lang === 'en' && (
             // Sitewide links to the German pages so crawlers and German readers find them from any page.
-            <nav aria-label="Auf Deutsch" lang="de" className="flex flex-wrap gap-x-4 gap-y-1">
-              <span>Auf Deutsch:</span>
+            <nav aria-label="Pages in German" className="flex flex-wrap gap-x-4 gap-y-1">
+              <span>In German:</span>
               {DE_LINKS.filter((l) => isLive(l.to)).map((l) => (
                 <SmartLink key={l.to} to={l.to} hrefLang="de" className="underline-offset-2 transition hover:text-fg hover:underline">
                   {l.label}
