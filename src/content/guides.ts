@@ -127,7 +127,7 @@ export const GUIDES: Guide[] = [
     description: 'Why a PDF is not enough, and what "structured" really means.',
     category: 'EN 16931',
     published: '2026-10-21',
-    reviewed: '2026-10-21',
+    reviewed: '2026-11-17',
     readMinutes: 4,
     compliance: true,
     sections: [
@@ -182,7 +182,7 @@ export const GUIDES: Guide[] = [
     description: 'Keep your accounting software. Add e-invoicing. Here is how the two fit together.',
     category: 'Accounting integrations',
     published: '2026-10-21',
-    reviewed: '2026-10-21',
+    reviewed: '2026-11-17',
     readMinutes: 5,
     sections: [
       {

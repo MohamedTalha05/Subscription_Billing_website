@@ -113,6 +113,10 @@ for (const [from, to] of Object.entries(REDIRECTS)) {
 /* ---------- sitemap.xml ---------- */
 
 const indexable = SITE_ROUTES.filter((r) => !r.noindex);
+// <lastmod> is only trusted by search engines while it reflects real content changes, so it comes from the
+// page's `reviewed` date (set by hand when its facts change) and is left out where none is kept, rather than
+// stamping every page with the build date on every deploy.
+const lastmod = (r) => (r.reviewed ? `\n    <lastmod>${r.reviewed}</lastmod>` : '');
 await write(
   'sitemap.xml',
   `<?xml version="1.0" encoding="UTF-8"?>
@@ -120,8 +124,7 @@ await write(
 ${indexable
   .map(
     (r) => `  <url>
-    <loc>${absoluteUrl(r.path)}</loc>
-    <lastmod>${today}</lastmod>${
+    <loc>${absoluteUrl(r.path)}</loc>${lastmod(r)}${
       r.alternates
         ? Object.entries(r.alternates)
             .map(([l, p]) => `\n    <xhtml:link rel="alternate" hreflang="${l}" href="${absoluteUrl(p)}"/>`)
