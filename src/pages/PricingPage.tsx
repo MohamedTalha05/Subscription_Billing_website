@@ -1,11 +1,18 @@
-import { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Fragment, useEffect, useState, type KeyboardEvent } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Check, Minus } from 'lucide-react';
 import { BrowserFrame, ButtonLink, CtaPanel, SCREENS, SectionHeader } from '../components/ui';
-import { LINKS } from '../config';
+import { COMBINED_PRICING, LINKS } from '../config';
 import { PLANS, type Plan } from '../content/plans';
 import { PRICING_FAQ } from '../content/pricingFaq';
-import { FaqList } from '../components/einvoicing';
+import { EInvoicingPlanCards, FaqList } from '../components/einvoicing';
+import {
+  EINVOICING_ENTERPRISE,
+  EINVOICING_PRICING_FAQ,
+  EINVOICING_PRICING_NOTE,
+  EINVOICING_UNIT_COST,
+  POSTAGE_COMPARISON,
+} from '../content/eInvoicing';
 
 type Billing = 'monthly' | 'annual';
 
@@ -99,13 +106,18 @@ const COMPARISON: { group: string; rows: [string, Cell, Cell, Cell][] }[] = [
       ['Custom domain & brand control', false, false, true],
     ],
   },
-  {
-    group: 'E-invoicing',
-    rows: [
-      ['XRechnung & ZUGFeRD e-invoices', true, true, true],
-      ['EN 16931 validation', true, true, true],
-    ],
-  },
+  // Shown only when e-invoicing is part of these plans (see COMBINED_PRICING).
+  ...(COMBINED_PRICING
+    ? [
+        {
+          group: 'E-invoicing',
+          rows: [
+            ['XRechnung & ZUGFeRD e-invoices', true, true, true],
+            ['EN 16931 validation', true, true, true],
+          ] as [string, Cell, Cell, Cell][],
+        },
+      ]
+    : []),
   { group: 'Discounts', rows: [['Coupons & discounts', false, false, true]] },
   {
     group: 'Tax',
@@ -192,6 +204,119 @@ function Comparison() {
   );
 }
 
+/* ---------------- E-Invoicing panel (separate pricing only) ---------------- */
+
+const euro2 = (n: number) => `€${n.toFixed(2)}`;
+
+function EInvoicingPricing() {
+  return (
+    <>
+      <EInvoicingPlanCards />
+      <p className="mt-8 text-center text-[0.9375rem] text-muted">{EINVOICING_PRICING_NOTE}</p>
+
+      <div className="mx-auto mt-16 grid max-w-5xl gap-6 lg:grid-cols-[1.3fr_1fr]">
+        <div>
+          <h3 className="font-display text-2xl">What one e-invoice costs</h3>
+          <p className="mt-3 leading-relaxed">
+            When you use your plan’s full volume. {POSTAGE_COMPARISON}
+          </p>
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+            <table className="w-full min-w-[420px] border-collapse text-left">
+              <caption className="sr-only">E-Invoicing cost per e-invoice by plan</caption>
+              <thead>
+                <tr className="bg-surface font-mono text-xs uppercase tracking-[0.14em] text-muted">
+                  <th scope="col" className="px-5 py-4 font-medium">Plan</th>
+                  <th scope="col" className="px-5 py-4 text-right font-medium">E-invoices / month</th>
+                  <th scope="col" className="px-5 py-4 text-right font-medium">Price / month</th>
+                  <th scope="col" className="px-5 py-4 text-right font-medium">Per e-invoice</th>
+                </tr>
+              </thead>
+              <tbody className="tabular-nums">
+                {EINVOICING_UNIT_COST.map((r) => (
+                  <tr key={r.name} className="border-t border-line-soft">
+                    <th scope="row" className="px-5 py-4 font-semibold text-fg">{r.name}</th>
+                    <td className="px-5 py-4 text-right">{r.included}</td>
+                    <td className="px-5 py-4 text-right">€{r.price}</td>
+                    <td className="px-5 py-4 text-right font-mono text-fg">
+                      {r.perInvoice === null ? 'free' : `≈ ${euro2(r.perInvoice)}`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <article className="card flex flex-col p-7">
+          <h3 className="text-xl font-semibold">{EINVOICING_ENTERPRISE.name}</h3>
+          <p className="mt-2 leading-relaxed">{EINVOICING_ENTERPRISE.desc}</p>
+          <p className="font-display mt-5 text-3xl text-fg">{EINVOICING_ENTERPRISE.price}</p>
+          <ul className="mt-5 flex-1 space-y-2.5 text-[0.9375rem]">
+            {EINVOICING_ENTERPRISE.features.map((f) => (
+              <li key={f} className="flex items-start gap-3 text-fg/90">
+                <Check size={17} className="mt-[3px] shrink-0 text-mint" aria-hidden="true" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <ButtonLink to={LINKS.sales} variant="ghost" size="md" className="mt-7 w-full">
+            Contact Sales
+          </ButtonLink>
+        </article>
+      </div>
+    </>
+  );
+}
+
+/* ---------------- Product tabs (separate pricing only) ---------------- */
+
+type Product = 'billing' | 'e-invoicing';
+
+const TABS: { id: Product; label: string; sub: string }[] = [
+  { id: 'billing', label: 'Subscription Billing', sub: 'Priced by active subscriptions' },
+  { id: 'e-invoicing', label: 'E-Invoicing', sub: 'Priced by e-invoices per month' },
+];
+
+/**
+ * Both panels are rendered into the HTML (the inactive one is hidden), so
+ * search engines and AI assistants see every price. /pricing/#e-invoicing
+ * opens the E-Invoicing tab directly.
+ */
+function ProductTabs({ value, onChange }: { value: Product; onChange: (p: Product) => void }) {
+  const onKey = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const i = TABS.findIndex((t) => t.id === value);
+    const next = TABS[(i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length];
+    onChange(next.id);
+    document.getElementById(`tab-${next.id}`)?.focus();
+  };
+  return (
+    <div role="tablist" aria-label="Product" className="mx-auto mt-10 grid max-w-xl grid-cols-2 gap-1.5 rounded-2xl border border-line bg-surface p-1.5">
+      {TABS.map((t) => {
+        const active = t.id === value;
+        return (
+          <button
+            key={t.id}
+            id={`tab-${t.id}`}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            aria-controls={`panel-${t.id}`}
+            tabIndex={active ? 0 : -1}
+            onClick={() => onChange(t.id)}
+            onKeyDown={onKey}
+            className={`rounded-xl px-4 py-3 text-left transition ${active ? 'bg-mint text-mint-ink' : 'text-body hover:text-fg'}`}
+          >
+            <span className="block font-semibold">{t.label}</span>
+            <span className={`block text-xs ${active ? 'text-mint-ink/80' : 'text-muted'}`}>{t.sub}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ---------------- FAQ ---------------- */
 
 /** Answers live in the HTML (native disclosure); the same lists feed the FAQPage structured data. */
@@ -200,31 +325,33 @@ function Faq() {
     <section className="container-x pb-12" aria-labelledby="pricing-faq">
       <div className="mx-auto max-w-4xl">
         <SectionHeader title={<span id="pricing-faq">Pricing questions, answered plainly</span>} />
-        <div className="mt-12">
-          <FaqList items={PRICING_FAQ} />
-        </div>
+        {COMBINED_PRICING ? (
+          <div className="mt-12">
+            <FaqList items={PRICING_FAQ} />
+          </div>
+        ) : (
+          <>
+            <p className="eyebrow mt-12">Subscription Billing</p>
+            <div className="mt-2">
+              <FaqList items={PRICING_FAQ} />
+            </div>
+            <p className="eyebrow mt-12">E-Invoicing</p>
+            <div className="mt-2">
+              <FaqList items={EINVOICING_PRICING_FAQ} openFirst={false} />
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
 }
 
-export default function PricingPage() {
-  const [billing, setBilling] = useState<Billing>('annual');
+/* ---------------- Subscription Billing plans ---------------- */
 
+function BillingPlans() {
+  const [billing, setBilling] = useState<Billing>('annual');
   return (
     <>
-      <section className="container-x pt-16 text-center sm:pt-24">
-        <SectionHeader
-          as="h1"
-          eyebrow="Pricing"
-          title="Simple, predictable pricing for billing and e-invoicing."
-          lead="Start free, no card required. E-invoicing is included in every plan, month-to-month, with no setup fee and no long-term contract."
-        />
-        {/* Older links point at /pricing/#billing and /pricing/#e-invoicing; both now land on the one set of plans. */}
-        <span id="billing" aria-hidden="true" />
-        <span id="e-invoicing" aria-hidden="true" />
-      </section>
-
       <h2 className="sr-only">Subscription Billing plans</h2>
       <div className="container-x text-center">
         <BillingToggle value={billing} onChange={setBilling} />
@@ -245,6 +372,59 @@ export default function PricingPage() {
         </p>
       </section>
       <Comparison />
+    </>
+  );
+}
+
+export default function PricingPage() {
+  const [product, setProduct] = useState<Product>('billing');
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (COMBINED_PRICING) return;
+    if (hash === '#e-invoicing') setProduct('e-invoicing');
+    else if (hash === '#billing') setProduct('billing');
+  }, [hash]);
+
+  const choose = (p: Product) => {
+    setProduct(p);
+    window.history.replaceState(null, '', `#${p}`);
+  };
+
+  return (
+    <>
+      <section className="container-x pt-16 text-center sm:pt-24">
+        <SectionHeader
+          as="h1"
+          eyebrow="Pricing"
+          title="Simple, predictable pricing for billing and e-invoicing."
+          lead={
+            COMBINED_PRICING
+              ? 'Start free, no card required. E-invoicing is included in every plan, month-to-month, with no setup fee and no long-term contract.'
+              : 'Start free, no card required. Each product has its own plans, month-to-month, with no setup fee and no long-term contract.'
+          }
+        />
+        {/* Hash targets so /pricing/#billing and /pricing/#e-invoicing land on the tabs (or on the one set of plans when combined). */}
+        <span id="billing" aria-hidden="true" />
+        <span id="e-invoicing" aria-hidden="true" />
+        {!COMBINED_PRICING && <ProductTabs value={product} onChange={choose} />}
+      </section>
+
+      {COMBINED_PRICING ? (
+        <BillingPlans />
+      ) : (
+        <>
+          <div id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden={product !== 'billing'}>
+            <BillingPlans />
+          </div>
+          <div id="panel-e-invoicing" role="tabpanel" aria-labelledby="tab-e-invoicing" hidden={product !== 'e-invoicing'}>
+            <h2 className="sr-only">E-Invoicing plans</h2>
+            <section className="container-x py-14 sm:py-16">
+              <EInvoicingPricing />
+            </section>
+          </div>
+        </>
+      )}
 
       <div className="border-t border-line pt-20 sm:pt-24">
         <Faq />
@@ -253,7 +433,7 @@ export default function PricingPage() {
       <CtaPanel
         eyebrow="Still deciding"
         title="Try it on your own plans before you commit."
-        subtitle="Every plan starts free, with no card required."
+        subtitle={COMBINED_PRICING ? 'Every plan starts free, with no card required.' : 'Both products start free, with no card required.'}
         primary={{ label: 'Start Free Trial', to: LINKS.trial }}
         secondary={{ label: 'Talk to Sales', to: LINKS.sales }}
       />

@@ -1,7 +1,12 @@
-import { LINKS } from '../config';
+import { COMBINED_PRICING, LINKS } from '../config';
+
+/** How e-invoicing appears in each plan's feature list, depending on the pricing model. */
+const E_INVOICING_LINES = COMBINED_PRICING
+  ? ['E-invoicing: XRechnung & ZUGFeRD', 'Tax & sales integrations']
+  : ['Tax, e-invoicing & sales integrations'];
 
 /**
- * Subscription Billing plans, with e-invoicing included in every plan. Shared by the pricing page and the structured
+ * Subscription Billing plans (e-invoicing is included when COMBINED_PRICING is on). Shared by the pricing page and the structured
  * data (JSON-LD) so search engines and AI assistants see the same prices as
  * visitors do.
  *
@@ -27,8 +32,7 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 25 active subscriptions',
       'Multiple payment gateways',
-      'E-invoicing: XRechnung & ZUGFeRD',
-      'Tax & sales integrations',
+      ...E_INVOICING_LINES,
       'Dunning management',
       'Email & chat support',
     ],
@@ -43,8 +47,7 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 100 active subscriptions',
       'Multiple payment gateways',
-      'E-invoicing: XRechnung & ZUGFeRD',
-      'Tax & sales integrations',
+      ...E_INVOICING_LINES,
       'Accounting software integration',
       'Smart dunning management',
       'Email & chat support',
@@ -59,8 +62,7 @@ export const PLANS: Plan[] = [
     features: [
       'Up to 250 active subscriptions',
       'Multiple payment gateways',
-      'E-invoicing: XRechnung & ZUGFeRD',
-      'Tax & sales integrations',
+      ...E_INVOICING_LINES,
       'Accounting software integration',
       'Smart dunning management',
       'REST API & webhooks',

@@ -1,4 +1,5 @@
 import type { Faq } from './pricingFaq';
+import { COMBINED_PRICING } from '../config';
 
 /** Top questions shown on the home page and published as FAQPage structured data. */
 export const HOME_FAQ: Faq[] = [
@@ -20,6 +21,8 @@ export const HOME_FAQ: Faq[] = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Free for up to 25 active subscriptions, then €9 or €19 a month. E-invoicing (XRechnung and ZUGFeRD) is included in every plan at no extra cost. Prices exclude VAT, with no setup fee.',
+    a: COMBINED_PRICING
+      ? 'Free for up to 25 active subscriptions, then €9 or €19 a month. E-invoicing (XRechnung and ZUGFeRD) is included in every plan at no extra cost. Prices exclude VAT, with no setup fee.'
+      : 'Subscription Billing is free for up to 25 active subscriptions, then €9 or €19 a month. E-Invoicing is free for 5 e-invoices a month, then €9 or €24 a month. Prices exclude VAT, with no setup fee.',
   },
 ];

@@ -8,10 +8,11 @@
  * exist here, so navigation never points at a page that hasn't been built.
  */
 import { PRICING_FAQ } from '../content/pricingFaq';
-import { COMPLIANCE_FAQ, EINVOICING_FAQ, MANDATE_REVIEWED } from '../content/eInvoicing';
+import { COMPLIANCE_FAQ, EINVOICING_FAQ, EINVOICING_PRICING_FAQ, MANDATE_REVIEWED } from '../content/eInvoicing';
 import { HOME_FAQ } from '../content/homeFaq';
 import { DE_CONTENT } from '../content/eInvoicing.de';
 import { TRANSLATIONS, type Lang } from '../i18n';
+import { COMBINED_PRICING } from '../config';
 import { ALL_FAQ } from '../content/faq';
 import { GUIDES, guidePath } from '../content/guides';
 import {
@@ -107,13 +108,21 @@ export const SITE_ROUTES: RouteMeta[] = [
   {
     path: '/pricing/',
     name: 'Pricing',
-    title: 'Pricing: Subscription Billing Plans with E-Invoicing',
-    description:
-      'Free for 25 subscriptions, then €9 or €19 a month. XRechnung and ZUGFeRD e-invoicing included in every plan. No setup fee, no contract.',
+    title: COMBINED_PRICING ? 'Pricing: Subscription Billing Plans with E-Invoicing' : 'Pricing: Subscription Billing & E-Invoicing Plans',
+    description: COMBINED_PRICING
+      ? 'Free for 25 subscriptions, then €9 or €19 a month. XRechnung and ZUGFeRD e-invoicing included in every plan. No setup fee, no contract.'
+      : 'Subscription Billing: free for 25 subscriptions, then €9 or €19 a month. E-Invoicing: 5 free e-invoices a month, then €9 or €24. No setup fee.',
     llms: 'Pricing',
     changefreq: 'monthly',
     priority: 0.9,
-    schema: () => [subscriptionBillingProduct(), faqPage('/pricing/', PRICING_FAQ)],
+    schema: () =>
+      COMBINED_PRICING
+        ? [subscriptionBillingProduct(), faqPage('/pricing/', PRICING_FAQ)]
+        : [
+            subscriptionBillingProduct(),
+            eInvoicingProduct(),
+            faqPage('/pricing/', [...PRICING_FAQ, ...EINVOICING_PRICING_FAQ]),
+          ],
   },
   {
     path: '/integrations/',

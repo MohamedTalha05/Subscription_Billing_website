@@ -17,6 +17,20 @@ export const LINKS = {
 } as const;
 
 /**
+ * Pricing model switch.
+ *
+ * false (now): E-Invoicing is priced separately, with its own plans (Free, Starter, Business)
+ *   on a second tab of the pricing page. Kept for the LTD (lifetime deal) campaign.
+ * true (after the LTD campaign): e-invoicing is included in every Subscription Billing plan.
+ *   The pricing page shows one set of plans and the separate E-Invoicing prices disappear
+ *   from the pricing FAQ, the FAQ page, the home FAQ and the pricing page's search metadata.
+ *
+ * Still to do before flipping to true: the E-Invoicing, solutions, German pages and
+ * structured data/llms.txt keep their own E-Invoicing prices regardless of this switch.
+ */
+export const COMBINED_PRICING = false;
+
+/**
  * The public support address is kept out of robots' reach: it is stored in
  * two parts (so no "name@domain" string exists in the HTML or the JavaScript
  * bundle), shown in pages as "support [at] app [dot] subscriptionbilling [dot] eu",

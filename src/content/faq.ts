@@ -3,7 +3,8 @@
  * duplicates removed. Built from the per-page lists so an answer edited in
  * one place changes everywhere.
  */
-import { COMPLIANCE_FAQ, EINVOICING_FAQ } from './eInvoicing';
+import { COMPLIANCE_FAQ, EINVOICING_FAQ, EINVOICING_PRICING_FAQ } from './eInvoicing';
+import { COMBINED_PRICING } from '../config';
 import { HOME_FAQ } from './homeFaq';
 import { PRICING_FAQ, type Faq } from './pricingFaq';
 
@@ -71,6 +72,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       byQ(HOME_FAQ, 'How much does it cost?'),
       ...PRICING_FAQ.filter((f) => !['Can I move over from Stripe Billing or Chargebee?', 'Do you support SEPA as well as cards?'].includes(f.q)),
+      ...(COMBINED_PRICING ? [] : EINVOICING_PRICING_FAQ),
     ],
   },
   { id: 'security', title: 'Security & GDPR', items: SECURITY_FAQ },

@@ -4,6 +4,8 @@
  * never drift apart. Keep answers self-contained: AI assistants often quote
  * a single answer without the question around it.
  */
+import { COMBINED_PRICING } from '../config';
+
 export type Faq = { q: string; a: string };
 
 export const PRICING_FAQ: Faq[] = [
@@ -11,10 +13,14 @@ export const PRICING_FAQ: Faq[] = [
     q: 'How is Subscription Billing priced?',
     a: 'Subscription Billing is priced in flat monthly tiers based on how many active subscriptions you manage: Free covers up to 25, Professional (€9 a month) covers up to 100, and Advanced (€19 a month) covers up to 250. You never pay a percentage of the revenue you process.',
   },
-  {
-    q: 'Is e-invoicing priced separately?',
-    a: 'No. Creating XRechnung and ZUGFeRD e-invoices is included in every Subscription Billing plan, including Free. There is no separate e-invoicing fee.',
-  },
+  ...(COMBINED_PRICING
+    ? [
+        {
+          q: 'Is e-invoicing priced separately?',
+          a: 'No. Creating XRechnung and ZUGFeRD e-invoices is included in every Subscription Billing plan, including Free. There is no separate e-invoicing fee.',
+        },
+      ]
+    : []),
   {
     q: 'Is there a setup fee?',
     a: 'No. There is no setup or onboarding fee on any Subscription Billing tier. You only pay for the plan you choose.',
