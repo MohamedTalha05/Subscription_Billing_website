@@ -13,7 +13,7 @@ export function llmsFacts(): string[] {
   const tiers = PLANS.map((p) =>
     p.price.monthly === 0
       ? `${p.name} (free, ${p.limit.toLowerCase()})`
-      : `${p.name} (${euro(p.price.monthly)} per month or ${euro(p.price.annual)} per month billed yearly, ${p.limit.toLowerCase()})`,
+      : `${p.name} (${euro(p.price.monthly)} per month or ${euro(p.price.annual)} per year with 2 months free, ${p.limit.toLowerCase()})`,
   ).join('; ');
 
   return [

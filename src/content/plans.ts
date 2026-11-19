@@ -10,11 +10,13 @@ const E_INVOICING_LINES = COMBINED_PRICING
  * data (JSON-LD) so search engines and AI assistants see the same prices as
  * visitors do.
  *
- * Annual billing saves 19%: €9 → €7.29 and €19 → €15.39 per month.
+ * Annual billing is "2 months free": the yearly price is 10 × the monthly price
+ * (€9 → €90 a year, €19 → €190 a year). The product app must charge the same amounts.
  */
 export type Plan = {
   name: string;
   desc: string;
+  /** monthly: price per month on monthly billing. annual: total per year on annual billing. */
   price: { monthly: number; annual: number };
   limit: string;
   popular?: boolean;
@@ -40,7 +42,7 @@ export const PLANS: Plan[] = [
   {
     name: 'Professional',
     desc: 'For a SaaS growing past its first paying customers.',
-    price: { monthly: 9, annual: 7.29 },
+    price: { monthly: 9, annual: 90 },
     limit: 'Up to 100 active subscriptions',
     popular: true,
     cta: { label: 'Start Free Trial', to: LINKS.trial },
@@ -56,7 +58,7 @@ export const PLANS: Plan[] = [
   {
     name: 'Advanced',
     desc: 'For platforms managing a larger subscriber base.',
-    price: { monthly: 19, annual: 15.39 },
+    price: { monthly: 19, annual: 190 },
     limit: 'Up to 250 active subscriptions',
     cta: { label: 'Start Free Trial', to: LINKS.trial },
     features: [

@@ -27,7 +27,7 @@ export const PRICING_FAQ: Faq[] = [
   },
   {
     q: 'Am I locked into a contract?',
-    a: 'No. Every Subscription Billing tier is month-to-month. Annual billing is optional and gives you a 19% discount.',
+    a: 'No. Every Subscription Billing tier is month-to-month. Annual billing is optional and gives you 2 months free: Professional is €90 a year and Advanced €190 a year.',
   },
   {
     q: 'Can I move over from Stripe Billing or Chargebee?',

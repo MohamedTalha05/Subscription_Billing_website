@@ -36,14 +36,14 @@ function BillingToggle({ value, onChange }: { value: Billing; onChange: (b: Bill
         />
       </button>
       <span className={annual ? 'text-fg' : 'text-body'}>Annual</span>
-      <span className="rounded-full bg-amber-bg px-3 py-1 text-sm text-amber">Save 19%</span>
+      <span className="rounded-full bg-amber-bg px-3 py-1 text-sm text-amber">2 months free</span>
     </div>
   );
 }
 
 function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
   const price = plan.price[billing];
-  const suffix = price === 0 ? 'Free forever' : billing === 'annual' ? 'per month, billed yearly' : 'per month';
+  const suffix = price === 0 ? 'Free forever' : billing === 'annual' ? 'per year · 2 months free' : 'per month';
   return (
     <article
       className={`relative flex flex-col rounded-2xl p-8 ${
