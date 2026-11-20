@@ -73,7 +73,6 @@ export const NAV: NavEntry[] = [
       { to: '/solutions/businesses/', label: 'For SMEs & service businesses', desc: 'Agencies, consultants, gyms and clubs' },
     ],
   },
-  { to: '/pricing/', label: 'Pricing' },
   {
     label: 'Resources',
     items: [
@@ -83,6 +82,8 @@ export const NAV: NavEntry[] = [
       { to: '/security/', label: 'Security & compliance', desc: 'GDPR, PSD2 and how we protect data' },
     ],
   },
+  // Last, so it sits at the right end of the menu next to the language switch.
+  { to: '/pricing/', label: 'Pricing' },
 ];
 
 export const FOOTER_COLUMNS: { title: string; links: NavLinkItem[] }[] = [

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Check, ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { ButtonLink, SmartLink } from './ui';
 import { LINKS, NAV, NAV_DE, type NavLinkItem } from '../config';
@@ -24,65 +24,73 @@ function useDismiss(open: boolean, ref: React.RefObject<HTMLElement | null>, clo
   }, [open, ref, close]);
 }
 
+/** United Kingdom flag. Inline SVG because flag emoji don't render on Windows. */
+function FlagGB() {
+  const clip = `gb-clip-${useId().replace(/:/g, '')}`;
+  return (
+    <svg viewBox="0 0 60 30" className="h-[14px] w-[22px] shrink-0 rounded-[2px]" aria-hidden="true" focusable="false">
+      <clipPath id={clip}>
+        <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" />
+      </clipPath>
+      <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+      <path d="M0,0 L60,30 M60,0 L0,30" clipPath={`url(#${clip})`} stroke="#C8102E" strokeWidth="4" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
+    </svg>
+  );
+}
+
+/** German flag. */
+function FlagDE() {
+  return (
+    <svg viewBox="0 0 5 3" className="h-[14px] w-[22px] shrink-0 rounded-[2px]" aria-hidden="true" focusable="false">
+      <rect width="5" height="1" y="0" fill="#000" />
+      <rect width="5" height="1" y="1" fill="#DD0000" />
+      <rect width="5" height="1" y="2" fill="#FFCE00" />
+    </svg>
+  );
+}
+
 /**
- * Language switch. Pages with a translation switch to their counterpart;
- * elsewhere, German leads to the German e-invoicing pages (the only German
- * pages so far) and English leads to the home page.
+ * Language switch: both languages always visible, the current one highlighted.
+ * Pages with a translation switch to their counterpart; elsewhere, German leads
+ * to the German e-invoicing pages (the only German pages so far) and English
+ * leads to the home page.
  */
-function LanguageMenu() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+function LanguageSwitch({ className = '' }: { className?: string }) {
   const { pathname } = useLocation();
   const lang = useLang();
-  useDismiss(open, ref, () => setOpen(false));
-  useEffect(() => setOpen(false), [pathname]);
-
   const other = counterpart(pathname);
   const options = [
-    { code: 'en' as Lang, short: 'EN', label: 'English', to: lang === 'en' ? pathname : other?.path ?? '/', note: '' },
-    {
-      code: 'de' as Lang,
-      short: 'DE',
-      label: 'Deutsch',
-      to: lang === 'de' ? pathname : other?.path ?? DE_HOME,
-      note: lang === 'en' && !other ? 'E-Rechnung' : '',
-    },
+    { code: 'en' as Lang, short: 'EN', label: 'English', Flag: FlagGB, to: lang === 'en' ? pathname : other?.path ?? '/' },
+    { code: 'de' as Lang, short: 'DE', label: 'Deutsch', Flag: FlagDE, to: lang === 'de' ? pathname : other?.path ?? DE_HOME },
   ];
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-haspopup="true"
-        aria-expanded={open}
-        aria-label={lang === 'de' ? 'Sprache: Deutsch' : 'Language: English'}
-        className="flex h-10 items-center gap-1.5 rounded-md border border-line bg-surface px-3.5 text-sm font-medium text-body transition hover:text-fg"
-      >
-        {lang.toUpperCase()} <ChevronDown size={14} className={`transition ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <ul className="absolute right-0 mt-2 w-56 overflow-hidden rounded-lg border border-line bg-surface py-1 shadow-xl">
-          {options.map((o) => (
-            <li key={o.code}>
-              <Link
-                to={o.to}
-                hrefLang={o.code}
-                lang={o.code}
-                aria-current={o.code === lang ? 'true' : undefined}
-                className="flex items-center justify-between px-4 py-2.5 text-sm text-fg hover:bg-surface-2"
-              >
-                <span>
-                  {o.label}
-                  {o.note && <span className="ml-2 font-mono text-[0.7rem] uppercase text-muted">{o.note}</span>}
-                </span>
-                {o.code === lang && <Check size={14} className="text-mint" />}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <nav aria-label={lang === 'de' ? 'Sprache' : 'Language'} className={`flex items-center gap-1 ${className}`}>
+      {options.map(({ code, short, label, Flag, to }) => {
+        const current = code === lang;
+        return (
+          <Link
+            key={code}
+            to={to}
+            hrefLang={code}
+            lang={code}
+            title={label}
+            aria-current={current ? 'true' : undefined}
+            className={`flex h-10 items-center gap-2 rounded-lg border px-3 text-sm font-bold tracking-wide transition ${
+              current
+                ? 'border-mint/50 bg-mint/10 text-fg'
+                : 'border-transparent text-muted hover:bg-surface-2 hover:text-fg'
+            }`}
+          >
+            <Flag />
+            {short}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -202,7 +210,7 @@ export function Header() {
       <div className="container-x flex h-[76px] items-center justify-between gap-6">
         <Logo />
 
-        <nav aria-label="Main" className="hidden items-center gap-9 text-[1.0625rem] lg:flex">
+        <nav aria-label="Main" className="ml-auto hidden items-center gap-9 whitespace-nowrap text-[1.0625rem] xl:flex">
           {nav.map((e) =>
             e.kind === 'link' ? (
               <NavLink key={e.item.to} to={e.item.to} className={linkClass}>
@@ -221,8 +229,9 @@ export function Header() {
           )}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
-          <LanguageMenu />
+        <div className="hidden shrink-0 items-center gap-5 whitespace-nowrap xl:flex">
+          <span className="h-7 w-px bg-line" aria-hidden="true" />
+          <LanguageSwitch />
           <SmartLink to={LINKS.signIn} className="text-[1.0625rem] font-semibold text-body transition hover:text-fg">
             {signIn}
           </SmartLink>
@@ -233,7 +242,7 @@ export function Header() {
 
         <button
           type="button"
-          className="rounded-md p-2 text-fg lg:hidden"
+          className="rounded-md p-2 text-fg xl:hidden"
           aria-label={lang === 'de' ? (mobileOpen ? 'Menü schließen' : 'Menü öffnen') : mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -244,7 +253,7 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div id="mobile-menu" className="h-[calc(100dvh-76px)] overflow-y-auto border-t border-line bg-canvas lg:hidden">
+        <div id="mobile-menu" className="h-[calc(100dvh-76px)] overflow-y-auto border-t border-line bg-canvas xl:hidden">
           <nav aria-label="Mobile" className="container-x flex flex-col py-4">
             {nav.map((e) =>
               e.kind === 'link' ? (
@@ -281,7 +290,8 @@ export function Header() {
                 </details>
               ),
             )}
-            <div className="mt-8 flex flex-col gap-3">
+            <LanguageSwitch className="mt-6" />
+            <div className="mt-6 flex flex-col gap-3">
               <ButtonLink to={LINKS.trial} size="md">
                 {trial}
               </ButtonLink>
